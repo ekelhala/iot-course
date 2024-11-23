@@ -3,7 +3,6 @@ import Express from 'express'
 import sensors from './routes/sensors';
 
 const PORT = process.env.PORT || 8000;
-
 const app = Express();
 
 // App-wide settings

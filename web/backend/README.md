@@ -35,3 +35,14 @@ The latest air pressure measurement from the BMP-280 in hPa.
 #### `/sensors/all`
 
 Returns all of the latest values (temperature in, temperature out, humidity and pressure)
+
+
+### `/history`
+
+#### `/history/temperature_in?start=[Date]&end=[Date]`
+
+#### `/history/temperature_out?start=[Date]&end=[Date]`
+
+#### `/history/humidity?start=[Date]&end=[Date]`
+
+#### `/history/pressure?start=[Date]&end=[Date]`
