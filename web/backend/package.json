@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend service for IoT course",
+  "main": ".src/index.ts",
+  "scripts": {
+    "start": "ts-node .src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "IoT",
+    "MQTT",
+    "NodeJS",
+    "Typescript"
+  ],
+  "author": "Emil Kelhälä",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/mqtt": "^0.0.34",
+    "express": "^4.21.1",
+    "mqtt": "^5.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
