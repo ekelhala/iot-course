@@ -1,0 +1,20 @@
+{
+  "name": "weather-collector",
+  "version": "1.0.0",
+  "description": "This service acts as a connector between the MQTT broker and MongoDB. It subscribes to topics that deliver sensor data from the weather station, and saves the received values to the database. The latest values from the broker are also cached to Redis, from which they can be easily queried.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emil Kelhälä",
+  "license": "MIT",
+  "dependencies": {
+    "@redis/client": "^1.6.0",
+    "@types/mongoose": "^5.11.96",
+    "@types/mqtt": "^0.0.34",
+    "mongoose": "^8.8.2",
+    "mqtt": "^5.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
