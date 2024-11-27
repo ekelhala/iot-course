@@ -1,4 +1,6 @@
 import Express from 'express'
+import { configDotenv } from "dotenv";
+configDotenv();
 
 import sensors from './routes/sensors';
 

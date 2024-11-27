@@ -1,0 +1,20 @@
+services:
+  weather-collector:
+    build: 
+      context: weather-collector
+  backend:
+    build:
+      context: backend
+    networks:
+      - default
+      - frontend
+    ports:
+      - 8000:8000
+  redis-cache:
+    image: redis:7.4.1-alpine
+
+networks:
+  frontend:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
