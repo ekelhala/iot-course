@@ -7,4 +7,9 @@ This repository contains files and source code for a weather station project don
 Listing of folders and their contents
 
 - `/lib` - Libraries needed for Pico to run the weather station
-- `src` - Micropython source code for Pico
+- `/src` - Micropython source code for Pico
+- `/web` - Services that enable the web interface and backend services to process sensor data
+
+## Architecture diagram
+
+![Architecture diagram](./img/iot-architecture.drawio.png)
