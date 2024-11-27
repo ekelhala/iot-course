@@ -18,20 +18,33 @@ router.get('/temperature_out', async (req, res) => {
     res.json(JSON.parse(data));
 })
 
-router.get('/temperature_in', (req, res) => {
-    res.json({});
+router.get('/temperature_in', async (req, res) => {
+    const data = await redisClient.get("sensors/temperature_in");
+    res.json(JSON.parse(data));
 })
 
-router.get('/pressure', (req, res) => {
-    res.json({});
+router.get('/pressure', async (req, res) => {
+    const data = await redisClient.get("sensors/pressure");
+    res.json(JSON.parse(data));
 })
 
-router.get('/humidity', (req, res) => {
-    res.json({});
+router.get('/humidity', async (req, res) => {
+    const data = await redisClient.get("sensors/humidity");
+    res.json(JSON.parse(data));
 })
 
-router.get('/all', (req, res) => {
-    res.json({});
+router.get('/all', async (req, res) => {
+    const temperature_in = JSON.parse(await redisClient.get("sensors/temperature_in"));
+    const temperature_out = JSON.parse(await redisClient.get("sensors/temperature_out"));
+    const pressure = JSON.parse(await redisClient.get("sensors/pressure"));
+    const humidity = JSON.parse(await redisClient.get("sensors/humidity"));
+
+    res.json({
+        temperature_in,
+        temperature_out,
+        pressure,
+        humidity
+    });
 })
 
 export default router;
