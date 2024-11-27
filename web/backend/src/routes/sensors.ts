@@ -12,7 +12,6 @@ redisClient.on('error', (err) => console.log('redis client error:', err));
 redisClient.connect();
 
 // Handlers
-
 router.get('/temperature_out', async (req, res) => {
     const data = await redisClient.get("sensors/temperature_out");
     res.json(JSON.parse(data));

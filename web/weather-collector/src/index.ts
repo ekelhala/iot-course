@@ -24,7 +24,7 @@ redisClient.connect();
 mqttClient.on('message', async (topic:string, message:Buffer, packet: mqtt.IPublishPacket) => {
     // caching the value once received
     const payload = {
-        data: message.toString(),
+        value: message.toString(),
         timestamp: new Date().toISOString()
     }
     await redisClient.set(topic, JSON.stringify(payload));
