@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
+import useWebSocket from "react-use-websocket";
 
 // Checks if we are on development mode, if yes, use localhost, if no, use relative path in production deployment
-const BASE_URL:string = import.meta.env.DEV ? 'http://localhost:8000' : '/api'
+const BASE_URL:string = import.meta.env.DEV ? '127.0.0.1:8000' : '/api'
 
 function App() {
 
@@ -24,10 +25,18 @@ function App() {
       timestamp: 0
     }
   })
+  useWebSocket(`ws://${BASE_URL}`, {
+    onMessage: async (message) => {
+      const data = (await axios.get(`http://${BASE_URL}/${message.data}`)).data
+      const eventName = message.data.replace('sensors/','');
+      const nextObject = Object.fromEntries([[eventName, data]]);
+      setWeatherData({...weatherData, ...nextObject});
+    }
+  })
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = (await axios.get(`${BASE_URL}/sensors/all`)).data;
+      const data = (await axios.get(`http://${BASE_URL}/sensors/all`)).data;
       setWeatherData(data);
     }
     fetchData();

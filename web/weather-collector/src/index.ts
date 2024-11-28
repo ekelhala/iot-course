@@ -19,6 +19,8 @@ const redisClient = createClient({url: process.env.REDIS_URL});
 redisClient.on('error', (error) => console.log('redis client error: ', error));
 redisClient.on('connect', () => console.log('redis client connected'))
 redisClient.connect();
+const pubClient = redisClient.duplicate();
+pubClient.connect();
 
 // MQTT handlers
 mqttClient.on('message', async (topic:string, message:Buffer, packet: mqtt.IPublishPacket) => {
@@ -28,6 +30,7 @@ mqttClient.on('message', async (topic:string, message:Buffer, packet: mqtt.IPubl
         timestamp: new Date().toISOString()
     }
     await redisClient.json.set(topic, '$', payload);
+    pubClient.publish('new_value', topic);
 });
 
 // subscribing to given topics once connected

@@ -5,7 +5,7 @@ services:
       context: weather-collector
     restart: unless-stopped
   backend:
-    container_name: backend
+    container_name: weather-backend
     build:
       context: backend
     networks:
@@ -19,7 +19,7 @@ services:
     image: redis/redis-stack-server:latest
     restart: unless-stopped
   frontend:
-    container_name: frontend
+    container_name: weather-frontend
     build:
       context: frontend
     networks:
