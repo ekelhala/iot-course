@@ -1,6 +1,7 @@
 import Express from 'express'
 import { configDotenv } from "dotenv";
 configDotenv();
+import cors from 'cors';
 
 import sensors from './routes/sensors';
 
@@ -10,6 +11,7 @@ const app = Express();
 // App-wide settings
 app.use(Express.json());
 app.disable('x-powered-by');
+app.use(cors())
 
 // Attach routers from their respective modules
 app.use('/sensors', sensors);
