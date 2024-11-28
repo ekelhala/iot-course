@@ -1,8 +1,10 @@
 services:
   weather-collector:
+    container_name: weather-collector
     build: 
       context: weather-collector
   backend:
+    container_name: backend
     build:
       context: backend
     networks:
@@ -11,7 +13,16 @@ services:
     ports:
       - 8000:8000
   redis-cache:
+    container_name: redis-cache
     image: redis/redis-stack-server:latest
+  frontend:
+    container_name: frontend
+    build:
+      context: frontend
+    networks:
+      - frontend
+    ports:
+      - 3002:4000
 
 networks:
   frontend:
