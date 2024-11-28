@@ -3,6 +3,7 @@ services:
     container_name: weather-collector
     build: 
       context: weather-collector
+    restart: unless-stopped
   backend:
     container_name: backend
     build:
@@ -12,9 +13,11 @@ services:
       - frontend
     ports:
       - 8000:8000
+    restart: unless-stopped
   redis-cache:
     container_name: redis-cache
     image: redis/redis-stack-server:latest
+    restart: unless-stopped
   frontend:
     container_name: frontend
     build:
@@ -23,6 +26,7 @@ services:
       - frontend
     ports:
       - 4000:3002
+    restart: unless-stopped
 
 networks:
   frontend:
