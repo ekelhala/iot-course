@@ -1,7 +1,7 @@
 import { configDotenv } from "dotenv";
 configDotenv();
 import mqtt from "mqtt";
-import { createClient } from "@redis/client";
+import { createClient } from 'redis';
 
 const mqttTopics:string[] = [
     "sensors/temperature_in",
@@ -27,7 +27,7 @@ mqttClient.on('message', async (topic:string, message:Buffer, packet: mqtt.IPubl
         value: message.toString(),
         timestamp: new Date().toISOString()
     }
-    await redisClient.set(topic, JSON.stringify(payload));
+    await redisClient.json.set(topic, '$', payload);
 });
 
 // subscribing to given topics once connected

@@ -16,13 +16,13 @@
   "author": "Emil Kelhälä",
   "license": "MIT",
   "dependencies": {
-    "@redis/client": "^1.6.0",
     "@types/express": "^5.0.0",
     "@types/mongoose": "^5.11.96",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "mongoose": "^8.8.2",
     "nodemon": "^3.1.7",
+    "redis": "^4.7.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }

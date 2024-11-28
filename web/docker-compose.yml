@@ -11,7 +11,7 @@ services:
     ports:
       - 8000:8000
   redis-cache:
-    image: redis:7.4.1-alpine
+    image: redis/redis-stack-server:latest
 
 networks:
   frontend:

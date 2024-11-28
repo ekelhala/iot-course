@@ -9,12 +9,12 @@
   "author": "Emil Kelhälä",
   "license": "MIT",
   "dependencies": {
-    "@redis/client": "^1.6.0",
     "@types/mongoose": "^5.11.96",
     "@types/mqtt": "^0.0.34",
     "dotenv": "^16.4.5",
     "mongoose": "^8.8.2",
     "mqtt": "^5.10.2",
+    "redis": "^4.7.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
