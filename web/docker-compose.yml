@@ -22,7 +22,7 @@ services:
     networks:
       - frontend
     ports:
-      - 3002:4000
+      - 4000:3002
 
 networks:
   frontend:
