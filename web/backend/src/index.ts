@@ -10,6 +10,7 @@ import sensors from './routes/sensors';
 const PORT = process.env.PORT || 8001;
 const app = Express();
 
+// Connecting to the MongoDB instance with connection URI from environment variables
 mongoose.connect(process.env.MONGODB_URI)
     .catch(error => console.log('error in mongodb connect(): ', error))
     .then(() => console.log('connected to mongodb'));

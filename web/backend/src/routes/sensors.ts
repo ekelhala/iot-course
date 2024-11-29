@@ -13,9 +13,12 @@ const mqttTopics:string[] = [
 // generic function to get a value from cache or db
 // also handles caching the value in case of cache miss
 const getValue = async (topic:string) => {
+    // First we look up the value from the cache
     let data:any = await redisClient.json.get(topic);
     if(!data) {
+    // If cache returns null, we get here
         switch(topic) {
+            // Get the latest value from the database by looking up with the respective data type
             case mqttTopics[0]:
                 data = await TemperatureIn.findOne().sort({$natural:-1});
                 break;
@@ -29,6 +32,7 @@ const getValue = async (topic:string) => {
                 data = await Pressure.findOne().sort({$natural:-1});
                 break;
         }
+        // Result of MongoDB query is in Document format, make it into regular Object
         data = data.toJSON();
         // caching the value from db
         await redisClient.json.set(topic, '$', data);
@@ -47,7 +51,7 @@ redisClient.on('connect', () => console.log('redis client connected'));
 redisClient.on('error', (err) => console.log('redis client error:', err));
 redisClient.connect();
 
-// Handlers
+// Handlers for different API endpoints
 router.get('/temperature_out', async (req, res) => {
     res.json(await getValue(mqttTopics[1]));
 })
@@ -65,7 +69,7 @@ router.get('/humidity', async (req, res) => {
 })
 
 router.get('/all', async (req, res) => {
-
+    // Here we build the response by looking up the values individually
     res.json({
         temperature_in: await getValue(mqttTopics[0]),
         temperature_out: await getValue(mqttTopics[1]),
