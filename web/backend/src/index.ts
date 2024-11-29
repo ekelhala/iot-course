@@ -10,7 +10,7 @@ import sensors from './routes/sensors';
 
 let wss : WebSocketServer;
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 const WS_PORT = Number(process.env.WS_PORT) || 8002;
 const app = Express();
 
