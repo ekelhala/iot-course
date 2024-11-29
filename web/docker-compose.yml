@@ -13,6 +13,7 @@ services:
       - frontend
     ports:
       - 8000:8000
+      - 8002:8002
     restart: unless-stopped
   redis-cache:
     container_name: redis-cache

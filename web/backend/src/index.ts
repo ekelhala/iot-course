@@ -11,6 +11,7 @@ import sensors from './routes/sensors';
 let wss : WebSocketServer;
 
 const PORT = process.env.PORT || 8000;
+const WS_PORT = Number(process.env.WS_PORT) || 8002;
 const app = Express();
 
 const redisClient = createClient({
@@ -45,9 +46,7 @@ app.use((req, res, next) => {
     res.status(404).json({error: 'Not found'});
 })
 
-const httpServer = http.createServer(app);
-wss = new WebSocketServer({server: httpServer});
+app.listen(PORT, () => console.log(`backend server listening on port ${PORT}`))
 
-httpServer.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
-})
+wss = new WebSocketServer({port: WS_PORT});
+wss.on('listening', () => console.log(`WebSocket server listening on port ${WS_PORT}`));
