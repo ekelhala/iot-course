@@ -3,8 +3,8 @@ import { configDotenv } from "dotenv";
 configDotenv();
 import cors from 'cors';
 import { createClient } from 'redis';
-import http from 'http';
 import { WebSocket, WebSocketServer } from 'ws';
+import mongoose from 'mongoose';
 
 import sensors from './routes/sensors';
 
@@ -28,6 +28,10 @@ redisClient.on('connect', () => {
     })
 });
 redisClient.connect();
+
+mongoose.connect(process.env.MONGODB_URI)
+    .catch(error => console.log('error in mongodb connect(): ', error))
+    .then(() => console.log('connected to mongodb'));
 
 // App-wide settings
 app.use(Express.json());

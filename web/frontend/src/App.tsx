@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import useWebSocket from "react-use-websocket";
 
 // Checks if we are on development mode, if yes, use localhost, if no, use relative path in production deployment
-const API_URL:string = import.meta.env.DEV ? 'http://localhost:8000' : '/api'
+const API_URL:string = import.meta.env.DEV ? 'http://localhost:8001' : '/api'
 const WS_URL:string = import.meta.env.DEV ? 'ws://127.0.0.1:8002' : 'ws://iot-weather.us.to/notify'
 
 function App() {
