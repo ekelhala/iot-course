@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import redis from "redis";
+import {createClient} from "redis";
 import {WebSocketServer} from "ws";
 
 configDotenv();
@@ -7,7 +7,7 @@ configDotenv();
 const PORT:number = Number(process.env.PORT) || 8002
 let wss:WebSocketServer;
 
-const redisSubscriber = redis.createClient({
+const redisSubscriber = createClient({
     url: process.env.REDIS_URL
 })
 redisSubscriber.on('connect', () => {
@@ -19,6 +19,7 @@ redisSubscriber.on('connect', () => {
         })
     })
 })
+redisSubscriber.connect();
 
 wss = new WebSocketServer({
     port: PORT
