@@ -5,7 +5,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import sensors from './routes/sensors';
-
+import history from './routes/history';
 
 const PORT = process.env.PORT || 8001;
 const app = Express();
@@ -22,6 +22,7 @@ app.use(cors())
 
 // Attach routers from their respective modules
 app.use('/sensors', sensors);
+app.use('/history', history);
 
 app.get('/', (req, res) => {
     res.json({data: 'Server is up!'});

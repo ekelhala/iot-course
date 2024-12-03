@@ -5,6 +5,13 @@ import { Model } from 'mongoose';
 
 const router = Express.Router();
 
+class TimestampError extends Error {
+    constructor() {
+        super('Start date must be before end date')
+        this.name = 'TimestampError'
+    }
+}
+
 // Creates and returns a MongoDB query based on string representations of date
 // throws an exception if start or end strings are not valid dates, or end is before start
 const makeDBQuery = (start:string, end:string) => {
@@ -14,7 +21,7 @@ const makeDBQuery = (start:string, end:string) => {
     // If startDate since Epoch has more milliseconds, it's set to later date
     // so throw an error here
     if(startDate.getTime() > endDate.getTime())
-        throw new Error('Start date must be before end date')
+        throw new TimestampError();
     // Or if everything is good, return the query here
     else
         return {timestamp: {$gt: startDate, $lt: endDate}};
@@ -42,9 +49,12 @@ router.get('/pressure', async (req, res, next) => await handleQuery(req, res, Pr
 
 // Error handler
 
-router.use((err, req, res, next) => {
+router.use((err:Error, req, res, next) => {
     console.error(err);
-    res.status(400).json({error: err.message})
+    if(err.name=='TimestampError')
+        res.status(400).json({error: err.message})
+    else
+        res.status(400).json({error: 'Invalid query parameters'})
 })
 
 export default router;
