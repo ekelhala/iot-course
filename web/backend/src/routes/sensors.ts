@@ -12,7 +12,7 @@ const mqttTopics:string[] = [
 
 // generic function to get a value from cache or db
 // also handles caching the value in case of cache miss
-const getValue = async (topic:string) => {
+const getValueFromCache = async (topic:string) => {
     // First we look up the value from the cache
     let data:any = await redisClient.json.get(topic);
     if(!data) {
@@ -53,28 +53,28 @@ redisClient.connect();
 
 // Handlers for different API endpoints
 router.get('/temperature_out', async (req, res) => {
-    res.json(await getValue(mqttTopics[1]));
+    res.json(await getValueFromCache(mqttTopics[1]));
 })
 
 router.get('/temperature_in', async (req, res) => {
-    res.json(await getValue(mqttTopics[0]));
+    res.json(await getValueFromCache(mqttTopics[0]));
 })
 
 router.get('/pressure', async (req, res) => {
-    res.json(await getValue(mqttTopics[3]));
+    res.json(await getValueFromCache(mqttTopics[3]));
 })
 
 router.get('/humidity', async (req, res) => {
-    res.json(await getValue(mqttTopics[2]));
+    res.json(await getValueFromCache(mqttTopics[2]));
 })
 
 router.get('/all', async (req, res) => {
     // Here we build the response by looking up the values individually
     res.json({
-        temperature_in: await getValue(mqttTopics[0]),
-        temperature_out: await getValue(mqttTopics[1]),
-        humidity: await getValue(mqttTopics[2]),
-        pressure: await getValue(mqttTopics[3])
+        temperature_in: await getValueFromCache(mqttTopics[0]),
+        temperature_out: await getValueFromCache(mqttTopics[1]),
+        humidity: await getValueFromCache(mqttTopics[2]),
+        pressure: await getValueFromCache(mqttTopics[3])
     });
 })
 

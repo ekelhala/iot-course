@@ -16,8 +16,13 @@ const weatherDataSchema = new mongoose.Schema({
     }
 });
 
+export interface IWeatherData extends mongoose.Document {
+    value: Number,
+    timestamp: Date
+}
+
 // Building the different types by using one schema
-export const TemperatureIn = mongoose.model('TemperatureIn', weatherDataSchema);
-export const TemperatureOut = mongoose.model('TemperatureOut', weatherDataSchema);
-export const Humidity = mongoose.model('Humidity', weatherDataSchema);
-export const Pressure = mongoose.model('Pressure', weatherDataSchema);
+export const TemperatureIn = mongoose.model<IWeatherData>('TemperatureIn', weatherDataSchema);
+export const TemperatureOut = mongoose.model<IWeatherData>('TemperatureOut', weatherDataSchema);
+export const Humidity = mongoose.model<IWeatherData>('Humidity', weatherDataSchema);
+export const Pressure = mongoose.model<IWeatherData>('Pressure', weatherDataSchema);
