@@ -12,7 +12,7 @@ This service provides a web page which fetches and displays data from the API pr
 
 **weather-collector**
 
-weather-collector connects to HiveMQ Cloud service, and receives sensor data through MQTT topics. After receiving this data, it caches the values to Redis, and also saves them to MondoDB for later use.
+weather-collector connects to HiveMQ Cloud service, and receives sensor data through MQTT topics. After receiving this data, it caches the values to Redis, and also saves them to MongoDB for later use.
 
 **weather-notifier**
 
