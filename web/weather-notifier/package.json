@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node ./src/index.ts"
+    "start": "ts-node ./src/index.ts",
+    "format": "prettier --write \"**/*.{js,ts}\""
   },
   "author": "Emil Kelhälä",
   "license": "MIT",
@@ -16,5 +17,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
   }
 }
