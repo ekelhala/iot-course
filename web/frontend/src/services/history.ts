@@ -1,8 +1,11 @@
 import axios from 'axios'
 import { API_URL } from '../constants'
 
-const getAll = async () => {
-  const response = await axios.get(`${API_URL}/history/all?start=2024-11-01&end=2024-12-31`)
+const getAll = async (start: string, end: string) => {
+  if (!start || !end) {
+    throw new Error('Start and end dates are required')
+  }
+  const response = await axios.get(`${API_URL}/history/all?start=${start}&end=${end}`)
   return response.data
 }
 

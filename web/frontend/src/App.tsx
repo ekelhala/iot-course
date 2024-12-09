@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { format } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import './App.css'
@@ -9,6 +10,19 @@ import WeatherData from './types/WeatherData'
 import WeatherHistory from './types/WeatherHistory'
 
 function App() {
+  const formatDateForInput = (date: Date): string => {
+    return format(date, "yyyy-MM-dd'T'HH:mm")
+  }
+
+  // First day of the year
+  const initialStartDate = formatDateForInput(new Date(new Date().getFullYear(), 0, 1))
+
+  // Current date and time
+  const initialEndDate = formatDateForInput(new Date())
+
+  const [startDate, setStartDate] = useState<string>(initialStartDate)
+  const [endDate, setEndDate] = useState<string>(initialEndDate)
+
   const [weatherData, setWeatherData] = useState<WeatherData>({
     temperature_in: { value: 0, timestamp: new Date() },
     temperature_out: { value: 0, timestamp: new Date() },
@@ -40,7 +54,11 @@ function App() {
   }
 
   const getWeatherHistoryData = async () => {
-    historyService.getAll().then((data) => {
+    const startDateFormatted = format(new Date(startDate), 'yyyy-MM-dd')
+    const endDateFormatted = format(new Date(endDate), 'yyyy-MM-dd')
+    console.log(startDateFormatted, endDateFormatted)
+
+    historyService.getAll(startDateFormatted, endDateFormatted).then((data) => {
       console.log(data)
       setWeatherHistory(data)
     })
@@ -94,8 +112,34 @@ function App() {
         </table>
       </div>
       <div className="container">
-        <b>Weather history</b>
-        <button onClick={getWeatherHistoryData}>Update</button>
+        <div className="container-row">
+          <b>Weather history</b>
+          <button onClick={getWeatherHistoryData}>Update</button>
+        </div>
+        <div className="container-row">
+          <label className="form-label" htmlFor="startDate">
+            Start Date
+          </label>
+          <input
+            className="form-input"
+            type="datetime-local"
+            id="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+        <div className="container-row">
+          <label className="form-label" htmlFor="endDate">
+            End Date
+          </label>
+          <input
+            className="form-input"
+            type="datetime-local"
+            id="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
         <table className="weather-table">
           <thead>
             <tr>
@@ -104,6 +148,11 @@ function App() {
             </tr>
           </thead>
           <tbody>
+            {temperatureInHistory.length === 0 && (
+              <tr>
+                <td colSpan={2}>No data available</td>
+              </tr>
+            )}
             {temperatureInHistory?.map((item, index) => (
               <tr key={`${item.timestamp}-${index}`}>
                 <td>{formatTimestamp(item.timestamp)}</td>
@@ -120,6 +169,11 @@ function App() {
             </tr>
           </thead>
           <tbody>
+            {temperatureOutHistory.length === 0 && (
+              <tr>
+                <td colSpan={2}>No data available</td>
+              </tr>
+            )}
             {temperatureOutHistory?.map((item, index) => (
               <tr key={`${item.timestamp}-${index}`}>
                 <td>{formatTimestamp(item.timestamp)}</td>
@@ -136,6 +190,11 @@ function App() {
             </tr>
           </thead>
           <tbody>
+            {humidityHistory.length === 0 && (
+              <tr>
+                <td colSpan={2}>No data available</td>
+              </tr>
+            )}
             {humidityHistory?.map((item, index) => (
               <tr key={`${item.timestamp}-${index}`}>
                 <td>{formatTimestamp(item.timestamp)}</td>
@@ -152,6 +211,11 @@ function App() {
             </tr>
           </thead>
           <tbody>
+            {pressureHistory.length === 0 && (
+              <tr>
+                <td colSpan={2}>No data available</td>
+              </tr>
+            )}
             {pressureHistory?.map((item, index) => (
               <tr key={`${item.timestamp}-${index}`}>
                 <td>{formatTimestamp(item.timestamp)}</td>

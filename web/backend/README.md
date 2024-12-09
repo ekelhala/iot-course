@@ -46,3 +46,7 @@ Returns all of the latest values (temperature in, temperature out, humidity and 
 #### `/history/humidity?start=[Date]&end=[Date]`
 
 #### `/history/pressure?start=[Date]&end=[Date]`
+
+#### `/history/all?start=[Date]&end=[Date]`
+
+Returns all of the latest values (temperature in, temperature out, humidity and pressure) between the given dates. The dates are in the format `YYYY-MM-DDTHH:MM:SSZ`.
