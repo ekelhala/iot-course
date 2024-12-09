@@ -34,18 +34,24 @@ const makeDBQuery = (start: string, end: string, type: string | null) => {
   else {
     switch (type) {
       case 'min':
+        // Match "timestamp"-property between startDate and endDate
+        // Use ascending sorting and limit matches to one, 1st one will be picked, which will be the smallest
         return [
           { $match: { timestamp: { $gt: startDate, $lt: endDate } } },
           { $sort: { value: 1 } },
           { $limit: 1 },
         ]
       case 'max':
+        // Match "timestamp"-property between startDate and endDate
+        // Use descending sorting and limit matches to one, resulting in 1st one to be picked,
+        // which is also the largest in the set
         return [
           { $match: { timestamp: { $gt: startDate, $lt: endDate } } },
           { $sort: { value: -1 } },
           { $limit: 1 },
         ]
       default:
+        // Here we match the "timestamp" property between startDate and endDate
         return [
           {
             $match: {
@@ -63,8 +69,11 @@ const makeDBQuery = (start: string, end: string, type: string | null) => {
 const handleQuery = async <T>(req: Request, model: Model<T>, next: NextFunction) => {
   try {
     let query
+    // query has "type" param set, we are looking for min/max value
+    // so we pass it on
     if (req.params.type)
       query = makeDBQuery(req.query.start.toString(), req.query.end.toString(), req.params.type)
+    // otherwise this is a regular history query
     else query = makeDBQuery(req.query.start.toString(), req.query.end.toString(), null)
     // Using aggregate to query, need to apply JSON transformation manually:
     const result = (await model.aggregate(query)).map((doc) => model.hydrate(doc).toJSON())
