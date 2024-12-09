@@ -1,15 +1,18 @@
 import Express, { NextFunction, Request, Response } from 'express'
+import { createClient } from 'redis'
 
-import {
-  TemperatureIn,
-  TemperatureOut,
-  Humidity,
-  Pressure,
-  IWeatherData,
-} from '../../models/WeatherData'
 import { Model } from 'mongoose'
+import { Humidity, Pressure, TemperatureIn, TemperatureOut } from '../../models/WeatherData'
 
 const router = Express.Router()
+
+// connecting to redis
+const redisClient = createClient({
+  url: process.env.REDIS_URL,
+})
+redisClient.on('connect', () => console.log('redis client connected'))
+redisClient.on('error', (err) => console.log('redis client error:', err))
+redisClient.connect()
 
 class TimestampError extends Error {
   constructor() {
@@ -31,30 +34,49 @@ const makeDBQuery = (start: string, end: string) => {
   else return { timestamp: { $gt: startDate, $lt: endDate } }
 }
 
-const handleQuery = async <T>(req: Request, res: Response, model: Model<T>, next: NextFunction) => {
+const handleQuery = async <T>(req: Request, model: Model<T>, next: NextFunction) => {
   try {
     const query = makeDBQuery(req.query.start.toString(), req.query.end.toString())
-    res.json(await model.find(query))
+    return await model.find(query)
   } catch (error) {
     next(error)
   }
 }
 
 // Handlers
+router.get('/temperature_in', async (req, res, next) => {
+  const result = await handleQuery(req, TemperatureIn, next)
+  res.json(result)
+})
 
-router.get(
-  '/temperature_in',
-  async (req, res, next) => await handleQuery(req, res, TemperatureIn, next)
-)
+router.get('/temperature_out', async (req, res, next) => {
+  const result = await handleQuery(req, TemperatureOut, next)
+  res.json(result)
+})
 
-router.get(
-  '/temperature_out',
-  async (req, res, next) => await handleQuery(req, res, TemperatureOut, next)
-)
+router.get('/humidity', async (req, res, next) => {
+  const result = await handleQuery(req, Humidity, next)
+  res.json(result)
+})
 
-router.get('/humidity', async (req, res, next) => await handleQuery(req, res, Humidity, next))
+router.get('/pressure', async (req, res, next) => {
+  const result = await handleQuery(req, Pressure, next)
+  res.json(result)
+})
 
-router.get('/pressure', async (req, res, next) => await handleQuery(req, res, Pressure, next))
+router.get('/all', async (req, res, next) => {
+  try {
+    res.json({
+      temperature_in: await handleQuery(req, TemperatureIn, next),
+      temperature_out: await handleQuery(req, TemperatureOut, next),
+      humidity: await handleQuery(req, Humidity, next),
+      pressure: await handleQuery(req, Pressure, next),
+    })
+  } catch (error) {
+    console.log('error', error)
+    next(error)
+  }
+})
 
 // Error handler
 
