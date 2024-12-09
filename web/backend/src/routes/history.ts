@@ -70,8 +70,7 @@ const handleQuery = async <T>(req: Request, model: Model<T>, next: NextFunction)
     const result = (await model.aggregate(query)).map((doc) => model.hydrate(doc).toJSON())
     // if query type is defined, we have min/max query
     // that means we should have only one result, so return only the first one
-    if(req.params.type)
-      return result[0]
+    if (req.params.type) return result[0]
     // otherwise we return everything
     return result
   } catch (error) {
