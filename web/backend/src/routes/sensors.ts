@@ -3,12 +3,10 @@ import Express from 'express'
 
 import { TemperatureIn, TemperatureOut, Humidity, Pressure } from '../../models/WeatherData'
 
-const mqttTopics: string[] = [
-  'sensors/temperature_in',
-  'sensors/temperature_out',
-  'sensors/humidity',
-  'sensors/pressure',
-]
+const TEMPERATURE_IN = 'sensors/temperature_in'
+const TEMPERATURE_OUT = 'sensors/temperature_out'
+const HUMIDITY = 'sensors/humidity'
+const PRESSURE = 'sensors/pressure'
 
 // generic function to get a value from cache or db
 // also handles caching the value in case of cache miss
@@ -19,16 +17,16 @@ const getValueFromCache = async (topic: string) => {
     // If cache returns null, we get here
     switch (topic) {
       // Get the latest value from the database by looking up with the respective data type
-      case mqttTopics[0]:
+      case TEMPERATURE_IN:
         data = await TemperatureIn.findOne().sort({ $natural: -1 })
         break
-      case mqttTopics[1]:
+      case TEMPERATURE_OUT:
         data = await TemperatureOut.findOne().sort({ $natural: -1 })
         break
-      case mqttTopics[2]:
+      case HUMIDITY:
         data = await Humidity.findOne().sort({ $natural: -1 })
         break
-      case mqttTopics[3]:
+      case PRESSURE:
         data = await Pressure.findOne().sort({ $natural: -1 })
         break
     }
@@ -53,28 +51,28 @@ redisClient.connect()
 
 // Handlers for different API endpoints
 router.get('/temperature_out', async (req, res) => {
-  res.json(await getValueFromCache(mqttTopics[1]))
+  res.json(await getValueFromCache(TEMPERATURE_OUT))
 })
 
 router.get('/temperature_in', async (req, res) => {
-  res.json(await getValueFromCache(mqttTopics[0]))
+  res.json(await getValueFromCache(TEMPERATURE_IN))
 })
 
 router.get('/pressure', async (req, res) => {
-  res.json(await getValueFromCache(mqttTopics[3]))
+  res.json(await getValueFromCache(PRESSURE))
 })
 
 router.get('/humidity', async (req, res) => {
-  res.json(await getValueFromCache(mqttTopics[2]))
+  res.json(await getValueFromCache(HUMIDITY))
 })
 
 router.get('/all', async (req, res) => {
   // Here we build the response by looking up the values individually
   res.json({
-    temperature_in: await getValueFromCache(mqttTopics[0]),
-    temperature_out: await getValueFromCache(mqttTopics[1]),
-    humidity: await getValueFromCache(mqttTopics[2]),
-    pressure: await getValueFromCache(mqttTopics[3]),
+    temperature_in: await getValueFromCache(TEMPERATURE_IN),
+    temperature_out: await getValueFromCache(TEMPERATURE_OUT),
+    humidity: await getValueFromCache(HUMIDITY),
+    pressure: await getValueFromCache(PRESSURE),
   })
 })
 
