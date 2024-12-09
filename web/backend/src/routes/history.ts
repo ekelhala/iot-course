@@ -23,43 +23,79 @@ class TimestampError extends Error {
 
 // Creates and returns a MongoDB query based on string representations of date
 // throws an exception if start or end strings are not valid dates, or end is before start
-const makeDBQuery = (start: string, end: string) => {
+const makeDBQuery = (start: string, end: string, type: string | null) => {
   // Create the date objects
   const startDate = new Date(start)
   const endDate = new Date(end)
   // If startDate since Epoch has more milliseconds, it's set to later date
   // so throw an error here
   if (startDate.getTime() > endDate.getTime()) throw new TimestampError()
-  // Or if everything is good, return the query here
-  else return { timestamp: { $gt: startDate, $lt: endDate } }
+  // Or if everything is good, create the query
+  else {
+    switch (type) {
+      case 'min':
+        return [
+          { $match: { timestamp: { $gt: startDate, $lt: endDate } } },
+          { $sort: { value: 1 } },
+          { $limit: 1 },
+        ]
+      case 'max':
+        return [
+          { $match: { timestamp: { $gt: startDate, $lt: endDate } } },
+          { $sort: { value: -1 } },
+          { $limit: 1 },
+        ]
+      default:
+        return [
+          {
+            $match: {
+              timestamp: {
+                $gt: startDate,
+                $lt: endDate,
+              },
+            },
+          },
+        ]
+    }
+  }
 }
 
 const handleQuery = async <T>(req: Request, model: Model<T>, next: NextFunction) => {
   try {
-    const query = makeDBQuery(req.query.start.toString(), req.query.end.toString())
-    return await model.find(query)
+    let query
+    if (req.params.type)
+      query = makeDBQuery(req.query.start.toString(), req.query.end.toString(), req.params.type)
+    else query = makeDBQuery(req.query.start.toString(), req.query.end.toString(), null)
+    // Using aggregate to query, need to apply JSON transformation manually:
+    const result = (await model.aggregate(query)).map((doc) => model.hydrate(doc).toJSON())
+    // if query type is defined, we have min/max query
+    // that means we should have only one result, so return only the first one
+    if(req.params.type)
+      return result[0]
+    // otherwise we return everything
+    return result
   } catch (error) {
     next(error)
   }
 }
 
-// Handlers
-router.get('/temperature_in', async (req, res, next) => {
+// Handlers, using conditional param type for everything with max and min
+router.get('/temperature_in/:type?', async (req, res, next) => {
   const result = await handleQuery(req, TemperatureIn, next)
   res.json(result)
 })
 
-router.get('/temperature_out', async (req, res, next) => {
+router.get('/temperature_out/:type?', async (req, res, next) => {
   const result = await handleQuery(req, TemperatureOut, next)
   res.json(result)
 })
 
-router.get('/humidity', async (req, res, next) => {
+router.get('/humidity/:type?', async (req, res, next) => {
   const result = await handleQuery(req, Humidity, next)
   res.json(result)
 })
 
-router.get('/pressure', async (req, res, next) => {
+router.get('/pressure/:type?', async (req, res, next) => {
   const result = await handleQuery(req, Pressure, next)
   res.json(result)
 })
