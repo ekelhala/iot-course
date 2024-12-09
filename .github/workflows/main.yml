@@ -1,0 +1,17 @@
+name: deploy
+on:
+  push:
+    branches:
+    - deploy
+jobs:
+  deploy: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH setup
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
+      - name: Build and restart
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.IP }} "cd iot-course && git pull && git checkout deploy && cd web && docker compose up --build -d && docker system prune -af"
