@@ -2,36 +2,25 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import './App.css'
-
-// Checks if we are on development mode, if yes, use localhost, if no, use relative path in production deployment
-const API_URL: string = import.meta.env.DEV ? 'http://localhost:8001' : '/api'
-const WS_URL: string = import.meta.env.DEV ? 'ws://127.0.0.1:8002' : 'ws://iot-weather.us.to/notify'
+import { API_URL, WS_URL } from './constants'
+import historyService from './services/history'
+import sensorService from './services/sensors'
+import WeatherData from './types/WeatherData'
+import WeatherHistory from './types/WeatherHistory'
 
 function App() {
-  const [weatherData, setWeatherData] = useState({
-    temperature_in: {
-      value: 0,
-      timestamp: 0,
-    },
-    temperature_out: {
-      value: 0,
-      timestamp: 0,
-    },
-    humidity: {
-      value: 0,
-      timestamp: 0,
-    },
-    pressure: {
-      value: 0,
-      timestamp: 0,
-    },
+  const [weatherData, setWeatherData] = useState<WeatherData>({
+    temperature_in: { value: 0, timestamp: new Date() },
+    temperature_out: { value: 0, timestamp: new Date() },
+    humidity: { value: 0, timestamp: new Date() },
+    pressure: { value: 0, timestamp: new Date() },
   })
 
-  const [weatherHistory, setWeatherHistory] = useState({
-    temperature_in: [] as { value: number; timestamp: Date }[],
-    temperature_out: [] as { value: number; timestamp: Date }[],
-    humidity: [] as { value: number; timestamp: Date }[],
-    pressure: [] as { value: number; timestamp: Date }[],
+  const [weatherHistory, setWeatherHistory] = useState<WeatherHistory>({
+    temperature_in: [],
+    temperature_out: [],
+    humidity: [],
+    pressure: [],
   })
 
   useWebSocket(`${WS_URL}`, {
@@ -43,23 +32,41 @@ function App() {
     },
   })
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = (await axios.get(`${API_URL}/sensors/all`)).data
+  const getLatestSensorData = async () => {
+    sensorService.getAll().then((data) => {
+      console.log(data)
       setWeatherData(data)
-    }
-    fetchData()
-  }, [])
-
-  const getWeatherHistory = async () => {
-    const data = (await axios.get(`${API_URL}/history/all?start=2024-11-01&end=2024-12-31`)).data
-    console.log(data)
-    setWeatherHistory(data)
+    })
   }
 
+  const getWeatherHistoryData = async () => {
+    historyService.getAll().then((data) => {
+      console.log(data)
+      setWeatherHistory(data)
+    })
+  }
+
+  useEffect(() => {
+    getLatestSensorData()
+    getWeatherHistoryData()
+  }, [])
+
+  // Converts a date and time to a string by using the current or specified locale
   const formatTimestamp = (timestamp: Date) => {
     return new Date(timestamp).toLocaleString()
   }
+
+  // Sorts the weather history by timestamp in descending order
+  const sortWeatherHistory = (weatherHistory: { value: number; timestamp: Date }[]) => {
+    return weatherHistory?.sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    )
+  }
+
+  const temperatureInHistory = sortWeatherHistory(weatherHistory.temperature_in)
+  const temperatureOutHistory = sortWeatherHistory(weatherHistory.temperature_out)
+  const humidityHistory = sortWeatherHistory(weatherHistory.humidity)
+  const pressureHistory = sortWeatherHistory(weatherHistory.pressure)
 
   return (
     <>
@@ -88,7 +95,7 @@ function App() {
       </div>
       <div className="container">
         <b>Weather history</b>
-        <button onClick={getWeatherHistory}>Update</button>
+        <button onClick={getWeatherHistoryData}>Update</button>
         <table className="weather-table">
           <thead>
             <tr>
@@ -97,14 +104,60 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {weatherHistory.temperature_in
-              ?.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-              .map((item, index) => (
-                <tr key={`${item.timestamp}-${index}`}>
-                  <td>{formatTimestamp(item.timestamp)}</td>
-                  <td>{item.value}&deg;C</td>
-                </tr>
-              ))}
+            {temperatureInHistory?.map((item, index) => (
+              <tr key={`${item.timestamp}-${index}`}>
+                <td>{formatTimestamp(item.timestamp)}</td>
+                <td>{item.value}&deg;C</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <table className="weather-table">
+          <thead>
+            <tr>
+              <th>timestamp</th>
+              <th>temperature_out</th>
+            </tr>
+          </thead>
+          <tbody>
+            {temperatureOutHistory?.map((item, index) => (
+              <tr key={`${item.timestamp}-${index}`}>
+                <td>{formatTimestamp(item.timestamp)}</td>
+                <td>{item.value}&deg;C</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <table className="weather-table">
+          <thead>
+            <tr>
+              <th>timestamp</th>
+              <th>humidity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {humidityHistory?.map((item, index) => (
+              <tr key={`${item.timestamp}-${index}`}>
+                <td>{formatTimestamp(item.timestamp)}</td>
+                <td>{item.value}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <table className="weather-table">
+          <thead>
+            <tr>
+              <th>timestamp</th>
+              <th>pressure</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pressureHistory?.map((item, index) => (
+              <tr key={`${item.timestamp}-${index}`}>
+                <td>{formatTimestamp(item.timestamp)}</td>
+                <td>{item.value} hPa</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

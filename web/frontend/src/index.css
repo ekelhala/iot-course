@@ -2,7 +2,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   margin: 0 auto;
   font-family: Arial, sans-serif;
 }
