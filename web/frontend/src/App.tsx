@@ -23,7 +23,7 @@ function App() {
   const [startDate, setStartDate] = useState<string>(initialStartDate)
   const [endDate, setEndDate] = useState<string>(initialEndDate)
 
-  const [weatherData, setWeatherData] = useState<WeatherData>({
+  const [weatherDataLatest, setWeatherDataLatest] = useState<WeatherData>({
     temperature_in: { value: 0, timestamp: new Date() },
     temperature_out: { value: 0, timestamp: new Date() },
     humidity: { value: 0, timestamp: new Date() },
@@ -42,14 +42,14 @@ function App() {
       const data = (await axios.get(`${API_URL}/${message.data}`)).data
       const eventName = message.data.replace('sensors/', '')
       const nextObject = Object.fromEntries([[eventName, data]])
-      setWeatherData({ ...weatherData, ...nextObject })
+      setWeatherDataLatest({ ...weatherDataLatest, ...nextObject })
     },
   })
 
   const getLatestSensorData = async () => {
     sensorService.getAll().then((data) => {
       console.log(data)
-      setWeatherData(data)
+      setWeatherDataLatest(data)
     })
   }
 
@@ -94,19 +94,19 @@ function App() {
           <tbody>
             <tr>
               <td>temperature_in</td>
-              <td>{weatherData.temperature_in?.value}&deg;C</td>
+              <td>{weatherDataLatest.temperature_in?.value}&deg;C</td>
             </tr>
             <tr>
               <td>temperature_out</td>
-              <td>{weatherData.temperature_out?.value}&deg;C</td>
+              <td>{weatherDataLatest.temperature_out?.value}&deg;C</td>
             </tr>
             <tr>
               <td>humidity</td>
-              <td>{weatherData.humidity?.value}%</td>
+              <td>{weatherDataLatest.humidity?.value}%</td>
             </tr>
             <tr>
               <td>pressure</td>
-              <td>{weatherData.pressure?.value} hPa</td>
+              <td>{weatherDataLatest.pressure?.value} hPa</td>
             </tr>
           </tbody>
         </table>
