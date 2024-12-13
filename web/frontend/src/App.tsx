@@ -8,6 +8,7 @@ import historyService from './services/history'
 import sensorService from './services/sensors'
 import WeatherData from './types/WeatherData'
 import WeatherHistory from './types/WeatherHistory'
+import WeatherDataMinMax from './types/WeatherDataMinMax'
 
 function App() {
   const formatDateForInput = (date: Date): string => {
@@ -37,6 +38,21 @@ function App() {
     pressure: [],
   })
 
+  const [weatherDataMinMax, setWeatherDataMinMax] = useState<WeatherDataMinMax>({
+    min: {
+      temperature_in: { value: 0, timestamp: new Date() },
+    temperature_out: { value: 0, timestamp: new Date() },
+    humidity: { value: 0, timestamp: new Date() },
+    pressure: { value: 0, timestamp: new Date() },
+    },
+    max: {
+      temperature_in: { value: 0, timestamp: new Date() },
+    temperature_out: { value: 0, timestamp: new Date() },
+    humidity: { value: 0, timestamp: new Date() },
+    pressure: { value: 0, timestamp: new Date() },
+    }
+  })
+
   useWebSocket(`${WS_URL}`, {
     onMessage: async (message) => {
       const data = (await axios.get(`${API_URL}/${message.data}`)).data
@@ -64,9 +80,19 @@ function App() {
     })
   }
 
+  const getMinMaxWeatherData = async () => {
+    const startDateFormatted = format(new Date(startDate), 'yyyy-MM-dd')
+    const endDateFormatted = format(new Date(endDate), 'yyyy-MM-dd')
+
+    const max = await historyService.getMax(startDateFormatted, endDateFormatted)
+    const min = await historyService.getMin(startDateFormatted, endDateFormatted)
+    setWeatherDataMinMax({max, min})
+  }
+
   useEffect(() => {
     getLatestSensorData()
     getWeatherHistoryData()
+    getMinMaxWeatherData()
   }, [])
 
   // Converts a date and time to a string by using the current or specified locale
@@ -140,6 +166,49 @@ function App() {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
+        <p>Maximum values during period</p>
+        
+        <table className='weather-table'>
+          <thead>
+            <tr>
+              <th>type</th>
+              <th>value</th>
+              <th>timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(weatherDataMinMax.max).map((dataType: string) => {
+              return (
+              <tr key={`max-${dataType}`}>
+                <td>{dataType}</td>
+                <td>{weatherDataMinMax.max[dataType].value}</td>
+                <td>{formatTimestamp(weatherDataMinMax.max[dataType].timestamp)}</td>
+              </tr>)
+            })}
+          </tbody>
+        </table>
+        <p>Minimum values during period</p>
+        <table className='weather-table'>
+          <thead>
+            <tr>
+              <th>type</th>
+              <th>value</th>
+              <th>timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(weatherDataMinMax.min).map((dataType: string) => {
+              return (
+              <tr key={`min-${dataType}`}>
+                <td>{dataType}</td>
+                <td>{weatherDataMinMax.min[dataType].value}</td>
+                <td>{formatTimestamp(weatherDataMinMax.min[dataType].timestamp)}</td>
+              </tr>)
+            })}
+          </tbody>
+        </table>
+
+        <p>Historical data</p>
         <table className="weather-table">
           <thead>
             <tr>
