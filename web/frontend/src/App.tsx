@@ -95,7 +95,8 @@ function App() {
     getLatestSensorData()
     getWeatherHistoryData()
     getMinMaxWeatherData()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate, endDate])
 
   // Converts a date and time to a string by using the current or specified locale
   const formatTimestamp = (timestamp: Date) => {
@@ -192,7 +193,6 @@ function App() {
           <button onClick={() => changeTimePeriod(365 * 24)}>1 year</button>
         </div>
 
-
         <p>Chart</p>
         <select
           onChange={(event) => setSelectedWeatherData(event.target.value)}
@@ -217,6 +217,15 @@ function App() {
           </thead>
           <tbody>
             {Object.keys(weatherDataMinMax.max).map((dataType: string) => {
+              // If there is no data, display a message
+              if (!weatherDataMinMax.max[dataType].value) {
+                return (
+                  <tr>
+                    <td>{dataType}</td>
+                    <td colSpan={2}>No data available</td>
+                  </tr>
+                )
+              }
               return (
                 <tr key={`max-${dataType}`}>
                   <td>{dataType}</td>
@@ -238,6 +247,15 @@ function App() {
           </thead>
           <tbody>
             {Object.keys(weatherDataMinMax.min).map((dataType: string) => {
+              // If there is no data, display a message
+              if (!weatherDataMinMax.min[dataType].value) {
+                return (
+                  <tr>
+                    <td>{dataType}</td>
+                    <td colSpan={2}>No data available</td>
+                  </tr>
+                )
+              }
               return (
                 <tr key={`min-${dataType}`}>
                   <td>{dataType}</td>
