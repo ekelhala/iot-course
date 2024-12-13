@@ -3,13 +3,14 @@ import { format } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import './App.css'
+import LatestWeatherTable from './components/LatestWeatherTable'
+import WeatherDataGraph from './components/WeatherDataGraph'
 import { API_URL, WS_URL } from './constants'
 import historyService from './services/history'
 import sensorService from './services/sensors'
 import WeatherData from './types/WeatherData'
-import WeatherHistory from './types/WeatherHistory'
 import WeatherDataMinMax from './types/WeatherDataMinMax'
-import WeatherDataGraph from './components/WeatherDataGraph'
+import WeatherHistory from './types/WeatherHistory'
 
 function App() {
   const formatDateForInput = (date: Date): string => {
@@ -126,29 +127,7 @@ function App() {
 
   return (
     <>
-      <div className="container">
-        <b>Latest weather data</b>
-        <table className="weather-table">
-          <tbody>
-            <tr>
-              <td>temperature_in</td>
-              <td>{weatherDataLatest.temperature_in?.value}&deg;C</td>
-            </tr>
-            <tr>
-              <td>temperature_out</td>
-              <td>{weatherDataLatest.temperature_out?.value}&deg;C</td>
-            </tr>
-            <tr>
-              <td>humidity</td>
-              <td>{weatherDataLatest.humidity?.value}%</td>
-            </tr>
-            <tr>
-              <td>pressure</td>
-              <td>{weatherDataLatest.pressure?.value} hPa</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <LatestWeatherTable weatherDataLatest={weatherDataLatest} />
       <div className="container">
         <div className="container-row space-between width-70">
           <b>Weather history</b>
@@ -204,7 +183,7 @@ function App() {
             </option>
           ))}
         </select>
-        <WeatherDataGraph data={weatherHistory[selectedWeatherData]} />
+        <WeatherDataGraph weatherData={weatherHistory[selectedWeatherData]} />
 
         <p>Maximum values during period</p>
         <table className="weather-table">

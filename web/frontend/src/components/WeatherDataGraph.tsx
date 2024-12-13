@@ -1,34 +1,40 @@
+import { scaleTime } from 'd3-scale'
+import { useEffect, useState } from 'react'
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import WeatherDataPoint from '../types/WeatherDataPoint'
 import { formatTimestamp } from '../utils'
-import { scaleTime } from 'd3-scale'
-import { useEffect, useState } from 'react'
 
-const WeatherDataGraph = (props: { data: WeatherDataPoint[] }) => {
-    const [domain, setDomain] = useState<[number, number] | null>(null)
-    const [filteredDataPoints, setFilteredDataPoints] = useState<WeatherDataPoint[]>([])
+interface WeatherDataGraphProps {
+  weatherData: WeatherDataPoint[]
+}
 
-    const thresholdFilter = (dataPoints: WeatherDataPoint[]) => {
-        // Get raw values
-        const values = dataPoints.map((point) => point.value);
-        // calculate mean and standard deviation
-        const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
-        const stdDev = Math.sqrt(values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length);
-        // form the threshold value at three standard deviations
-        const threshold = mean + 3 * stdDev;
-        // filter the data
-        const filteredDataPoints = dataPoints.filter((dataPoint) => dataPoint.value < threshold)
-        return filteredDataPoints
-    }
+const WeatherDataGraph = ({ weatherData }: WeatherDataGraphProps) => {
+  const [domain, setDomain] = useState<[number, number] | null>(null)
+  const [filteredDataPoints, setFilteredDataPoints] = useState<WeatherDataPoint[]>([])
+
+  const thresholdFilter = (dataPoints: WeatherDataPoint[]) => {
+    // Get raw values
+    const values = dataPoints.map((point) => point.value)
+    // calculate mean and standard deviation
+    const mean = values.reduce((sum, v) => sum + v, 0) / values.length
+    const stdDev = Math.sqrt(
+      values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length
+    )
+    // form the threshold value at three standard deviations
+    const threshold = mean + 3 * stdDev
+    // filter the data
+    const filteredDataPoints = dataPoints.filter((dataPoint) => dataPoint.value < threshold)
+    return filteredDataPoints
+  }
 
   useEffect(() => {
-    const filtered = thresholdFilter(props.data)
+    const filtered = thresholdFilter(weatherData)
     const numericValues = filtered.map((value) => new Date(value.timestamp).valueOf())
     const min = Math.min(...numericValues)
     const max = Math.max(...numericValues)
     setDomain([min, max])
     setFilteredDataPoints(filtered)
-  }, [props.data])
+  }, [weatherData])
 
   if (domain) {
     return (
