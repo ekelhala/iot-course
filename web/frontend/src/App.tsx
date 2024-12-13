@@ -11,12 +11,10 @@ import sensorService from './services/sensors'
 import WeatherData from './types/WeatherData'
 import WeatherDataMinMax from './types/WeatherDataMinMax'
 import WeatherHistory from './types/WeatherHistory'
+import { formatDateForInput } from './utils'
+import WeatherDateRangeSelector from './components/WeatherDateRangeSelector'
 
 function App() {
-  const formatDateForInput = (date: Date): string => {
-    return format(date, "yyyy-MM-dd'T'HH:mm")
-  }
-
   // First day of the year
   const initialStartDate = formatDateForInput(new Date(new Date().getFullYear(), 0, 1))
 
@@ -92,10 +90,14 @@ function App() {
     setWeatherDataMinMax({ max, min })
   }
 
+  const fetchLatestData = async () => {
+    await getLatestSensorData()
+    await getWeatherHistoryData()
+    await getMinMaxWeatherData()
+  }
+
   useEffect(() => {
-    getLatestSensorData()
-    getWeatherHistoryData()
-    getMinMaxWeatherData()
+    fetchLatestData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate])
 
@@ -111,15 +113,6 @@ function App() {
     )
   }
 
-  // Set start date and end date according to the time period
-  // timePeriod: number - time period in hours
-  const changeTimePeriod = (timePeriodInHours: number) => {
-    const now = new Date()
-    const timePeriodAgo = new Date(now.getTime() - timePeriodInHours * 1000 * 60 * 60)
-    setEndDate(formatDateForInput(now))
-    setStartDate(formatDateForInput(timePeriodAgo))
-  }
-
   const temperatureInHistory = sortWeatherHistory(weatherHistory.temperature_in)
   const temperatureOutHistory = sortWeatherHistory(weatherHistory.temperature_out)
   const humidityHistory = sortWeatherHistory(weatherHistory.humidity)
@@ -128,50 +121,15 @@ function App() {
   return (
     <>
       <LatestWeatherTable weatherDataLatest={weatherDataLatest} />
-      <div className="container">
-        <div className="container-row space-between width-70">
-          <b>Weather history</b>
-          <button
-            onClick={() => {
-              getWeatherHistoryData()
-              getMinMaxWeatherData()
-            }}
-          >
-            Update
-          </button>
-        </div>
-        <div className="container-row space-between width-70">
-          <label className="form-label" htmlFor="startDate">
-            Start Date
-          </label>
-          <input
-            className="form-input"
-            type="datetime-local"
-            id="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
-        <div className="container-row space-between width-70">
-          <label className="form-label" htmlFor="endDate">
-            End Date
-          </label>
-          <input
-            className="form-input"
-            type="datetime-local"
-            id="endDate"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-        </div>
-        <div className="container-row">
-          <button onClick={() => changeTimePeriod(1)}>1 hour</button>
-          <button onClick={() => changeTimePeriod(24)}>1 day</button>
-          <button onClick={() => changeTimePeriod(7 * 24)}>1 week</button>
-          <button onClick={() => changeTimePeriod(30 * 24)}>1 month</button>
-          <button onClick={() => changeTimePeriod(365 * 24)}>1 year</button>
-        </div>
+      <WeatherDateRangeSelector
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        fetchLatestData={fetchLatestData}
+      />
 
+      <div className="container">
         <p>Chart</p>
         <select
           onChange={(event) => setSelectedWeatherData(event.target.value)}
@@ -184,7 +142,9 @@ function App() {
           ))}
         </select>
         <WeatherDataGraph weatherData={weatherHistory[selectedWeatherData]} />
+      </div>
 
+      <div className="container">
         <p>Maximum values during period</p>
         <table className="weather-table">
           <thead>
