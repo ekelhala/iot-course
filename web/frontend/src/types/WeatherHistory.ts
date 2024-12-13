@@ -1,8 +1,10 @@
+import WeatherDataPoint from "./WeatherDataPoint";
+
 type WeatherHistory = {
-  temperature_in: { value: number; timestamp: Date }[]
-  temperature_out: { value: number; timestamp: Date }[]
-  humidity: { value: number; timestamp: Date }[]
-  pressure: { value: number; timestamp: Date }[]
+  temperature_in: WeatherDataPoint[]
+  temperature_out: WeatherDataPoint[]
+  humidity: WeatherDataPoint[]
+  pressure: WeatherDataPoint[]
 }
 
 export default WeatherHistory
