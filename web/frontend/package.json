@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "docker": "docker run -p 6379:6379 --rm --name some-redis redis/redis-stack-server:latest",
+    "backend": "cd ../backend && npm run dev",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,jsx,tsx}\"",
