@@ -1,4 +1,4 @@
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis } from 'recharts'
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import WeatherDataPoint from '../types/WeatherDataPoint'
 import { formatTimestamp } from '../utils'
 import { scaleTime } from 'd3-scale'
@@ -35,6 +35,7 @@ const WeatherDataGraph = (props: { data: WeatherDataPoint[] }) => {
             .map((date) => date.valueOf())}
           tickFormatter={formatTimestamp}
         />
+        <YAxis />
         <Tooltip labelFormatter={formatTimestamp} />
         <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
