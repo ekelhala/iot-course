@@ -9,6 +9,7 @@ import sensorService from './services/sensors'
 import WeatherData from './types/WeatherData'
 import WeatherHistory from './types/WeatherHistory'
 import WeatherDataMinMax from './types/WeatherDataMinMax'
+import WeatherDataGraph from './components/WeatherDataGraph'
 
 function App() {
   const formatDateForInput = (date: Date): string => {
@@ -166,6 +167,10 @@ function App() {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
+
+        <p>Chart</p>
+        <WeatherDataGraph data={weatherHistory.temperature_out} />
+
         <p>Maximum values during period</p>
 
         <table className="weather-table">
