@@ -108,6 +108,15 @@ function App() {
     )
   }
 
+  // Set start date and end date according to the time period
+  // timePeriod: number - time period in hours
+  const changeTimePeriod = (timePeriodInHours: number) => {
+    const now = new Date()
+    const timePeriodAgo = new Date(now.getTime() - timePeriodInHours * 1000 * 60 * 60)
+    setEndDate(formatDateForInput(now))
+    setStartDate(formatDateForInput(timePeriodAgo))
+  }
+
   const temperatureInHistory = sortWeatherHistory(weatherHistory.temperature_in)
   const temperatureOutHistory = sortWeatherHistory(weatherHistory.temperature_out)
   const humidityHistory = sortWeatherHistory(weatherHistory.humidity)
@@ -139,11 +148,18 @@ function App() {
         </table>
       </div>
       <div className="container">
-        <div className="container-row">
+        <div className="container-row space-between width-70">
           <b>Weather history</b>
-          <button onClick={getWeatherHistoryData}>Update</button>
+          <button
+            onClick={() => {
+              getWeatherHistoryData()
+              getMinMaxWeatherData()
+            }}
+          >
+            Update
+          </button>
         </div>
-        <div className="container-row">
+        <div className="container-row space-between width-70">
           <label className="form-label" htmlFor="startDate">
             Start Date
           </label>
@@ -155,7 +171,7 @@ function App() {
             onChange={(e) => setStartDate(e.target.value)}
           />
         </div>
-        <div className="container-row">
+        <div className="container-row space-between width-70">
           <label className="form-label" htmlFor="endDate">
             End Date
           </label>
@@ -167,12 +183,19 @@ function App() {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
+        <div className="container-row">
+          <button onClick={() => changeTimePeriod(1)}>1 hour</button>
+          <button onClick={() => changeTimePeriod(24)}>1 day</button>
+          <button onClick={() => changeTimePeriod(7 * 24)}>1 week</button>
+          <button onClick={() => changeTimePeriod(30 * 24)}>1 month</button>
+          <button onClick={() => changeTimePeriod(365 * 24)}>1 year</button>
+        </div>
+
 
         <p>Chart</p>
         <WeatherDataGraph data={weatherHistory.temperature_out} />
 
         <p>Maximum values during period</p>
-
         <table className="weather-table">
           <thead>
             <tr>

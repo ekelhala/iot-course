@@ -4,7 +4,7 @@ b {
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid gray;
   padding: 0.6em 1.2em;
   margin: 0.5em;
   font-size: 1em;
@@ -16,6 +16,8 @@ button {
 }
 button:hover {
   border-color: #646cff;
+  scale: 1.05;
+  transition: scale 0.25s;
 }
 button:focus,
 button:focus-visible {
@@ -34,6 +36,14 @@ button:focus-visible {
   margin: 10px auto;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
+.width-70 {
+  width: 70%;
+}
+
 .form-label {
   display: block;
   font-weight: bold;
@@ -41,9 +51,10 @@ button:focus-visible {
 }
 
 .form-input {
-  padding: 10px;
+  padding: 12px;
+  margin-left: 10px;
   border: 2px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 16px;
   box-sizing: border-box;
 }
