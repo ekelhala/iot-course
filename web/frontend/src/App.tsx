@@ -25,7 +25,6 @@ function App() {
 
   const [startDate, setStartDate] = useState<string>(initialStartDate)
   const [endDate, setEndDate] = useState<string>(initialEndDate)
-  const [selectedWeatherData, setSelectedWeatherData] = useState('temperature_out')
 
   const [weatherDataLatest, setWeatherDataLatest] = useState<WeatherData>({
     temperature_in: { value: 0, timestamp: new Date() },
@@ -113,22 +112,7 @@ function App() {
         setEndDate={setEndDate}
         fetchLatestData={fetchLatestData}
       />
-
-      <div className="container">
-        <p>Chart</p>
-        <select
-          onChange={(event) => setSelectedWeatherData(event.target.value)}
-          value={selectedWeatherData}
-        >
-          {Object.keys(weatherHistory).map((historyItem) => (
-            <option key={`history-selector-${historyItem}`} value={historyItem}>
-              {historyItem}
-            </option>
-          ))}
-        </select>
-        <WeatherDataGraph weatherData={weatherHistory[selectedWeatherData]} />
-      </div>
-
+      <WeatherDataGraph weatherHistory={weatherHistory} />
       <MinMaxTable weatherDataMinMax={weatherDataMinMax} />
       <HistoryTable weatherHistory={weatherHistory} />
     </>

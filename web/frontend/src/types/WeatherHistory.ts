@@ -1,6 +1,6 @@
-import WeatherDataPoint from "./WeatherDataPoint";
+import WeatherDataPoint from './WeatherDataPoint'
 
-interface WeatherHistory extends Record<string, any> {
+interface WeatherHistory extends Record<string, WeatherDataPoint[]> {
   temperature_in: WeatherDataPoint[]
   temperature_out: WeatherDataPoint[]
   humidity: WeatherDataPoint[]

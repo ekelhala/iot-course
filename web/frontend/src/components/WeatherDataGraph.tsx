@@ -2,15 +2,20 @@ import { scaleTime } from 'd3-scale'
 import { useEffect, useState } from 'react'
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import WeatherDataPoint from '../types/WeatherDataPoint'
+import WeatherHistory from '../types/WeatherHistory'
 import { formatTimestamp } from '../utils'
 
 interface WeatherDataGraphProps {
-  weatherData: WeatherDataPoint[]
+  weatherHistory: WeatherHistory
 }
 
-const WeatherDataGraph = ({ weatherData }: WeatherDataGraphProps) => {
+const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
+  const [selectedWeatherData, setSelectedWeatherData] = useState('temperature_out')
   const [domain, setDomain] = useState<[number, number] | null>(null)
   const [filteredDataPoints, setFilteredDataPoints] = useState<WeatherDataPoint[]>([])
+
+  // Get the selected weather data
+  const weatherData = weatherHistory[selectedWeatherData]
 
   const thresholdFilter = (dataPoints: WeatherDataPoint[]) => {
     // Get raw values
@@ -38,29 +43,42 @@ const WeatherDataGraph = ({ weatherData }: WeatherDataGraphProps) => {
 
   if (domain) {
     return (
-      <LineChart
-        width={500}
-        height={200}
-        data={filteredDataPoints.map((data) => {
-          return { timestamp: new Date(data.timestamp).valueOf(), value: data.value }
-        })}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="timestamp"
-          domain={domain}
-          scale="time"
-          type="number"
-          ticks={scaleTime()
-            .domain(domain)
-            .ticks(5)
-            .map((date) => date.valueOf())}
-          tickFormatter={formatTimestamp}
-        />
-        <YAxis />
-        <Tooltip labelFormatter={formatTimestamp} />
-        <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-      </LineChart>
+      <div className="container">
+        <p>Chart</p>
+        <select
+          onChange={(event) => setSelectedWeatherData(event.target.value)}
+          value={selectedWeatherData}
+        >
+          {Object.keys(weatherHistory).map((historyItem) => (
+            <option key={`history-selector-${historyItem}`} value={historyItem}>
+              {historyItem}
+            </option>
+          ))}
+        </select>
+        <LineChart
+          width={500}
+          height={200}
+          data={filteredDataPoints.map((data) => {
+            return { timestamp: new Date(data.timestamp).valueOf(), value: data.value }
+          })}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="timestamp"
+            domain={domain}
+            scale="time"
+            type="number"
+            ticks={scaleTime()
+              .domain(domain)
+              .ticks(5)
+              .map((date) => date.valueOf())}
+            tickFormatter={formatTimestamp}
+          />
+          <YAxis />
+          <Tooltip labelFormatter={formatTimestamp} />
+          <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+        </LineChart>
+      </div>
     )
   }
   return null

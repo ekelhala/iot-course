@@ -22,7 +22,7 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
             // If there is no data, display a message
             if (!weatherDataMinMax.max[dataType].value) {
               return (
-                <tr>
+                <tr key={`max-${dataType}`}>
                   <td>{dataType}</td>
                   <td colSpan={2}>No data available</td>
                 </tr>
@@ -52,7 +52,7 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
             // If there is no data, display a message
             if (!weatherDataMinMax.min[dataType].value) {
               return (
-                <tr>
+                <tr key={`min-${dataType}`}>
                   <td>{dataType}</td>
                   <td colSpan={2}>No data available</td>
                 </tr>
