@@ -28,7 +28,7 @@ const WeatherDateRangeSelector = ({
   }
 
   return (
-    <Box sx={{ m: 3 }}>
+    <Box textAlign="center" sx={{ m: 3 }}>
       <Stack className="container-row" spacing={8} direction="row">
         <b>Weather history</b>
         <Button

@@ -14,7 +14,7 @@ interface LatestWeatherTableProps {
 
 const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
   return (
-    <Box sx={{ m: 3 }}>
+    <Box textAlign="center" sx={{ m: 3 }}>
       <b>Latest values</b>
       <TableContainer className="weather-table" component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

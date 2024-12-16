@@ -56,11 +56,10 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
 
   if (domain) {
     return (
-      <Box sx={{ m: 3 }}>
+      <Box textAlign="center" sx={{ m: 3 }}>
         <Stack className="container-row" spacing={4} direction="row">
-          <b>Chart</b>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Weather data</InputLabel>
+            <InputLabel id="demo-simple-select-label">Chart data</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -77,8 +76,8 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
           </FormControl>
         </Stack>
         <LineChart
-          width={500}
-          height={200}
+          width={600}
+          height={250}
           data={filteredDataPoints.map((data) => {
             return { timestamp: new Date(data.timestamp).valueOf(), value: data.value }
           })}

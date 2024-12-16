@@ -27,7 +27,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
   const pressureHistory = sortWeatherHistory(weatherHistory.pressure)
 
   return (
-    <Box sx={{ m: 3 }}>
+    <Box textAlign="center" sx={{ m: 3 }}>
       <b>Historical data</b>
 
       <TableContainer className="weather-table" component={Paper}>
