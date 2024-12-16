@@ -19,8 +19,7 @@ body {
 }
 
 .weather-table {
-  min-width: 500px;
-  max-width: 800px;
+  width: 100%;
   table-layout: auto;
   border-collapse: collapse;
   margin: 20px auto;
@@ -42,9 +41,9 @@ body {
 }
 
 .weather-table tr:nth-child(even) {
-  background-color: #c1c1c1;
+  background-color: #d4d4d4;
 }
 
 .weather-table tr:hover {
-  background-color: #6d6d6d;
+  background-color: #b9b9b9;
 }

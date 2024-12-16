@@ -46,3 +46,41 @@ button:focus-visible {
   font-size: 16px;
   box-sizing: border-box;
 }
+
+/* Small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  button {
+    width: 40%;
+    padding: 0.5em;
+  }
+
+  .form-input {
+    width: 70%;
+  }
+}
+
+/* Medium devices (tablets, 600px to 768px) */
+@media only screen and (min-width: 600px) and (max-width: 768px) {
+  button {
+    width: auto;
+    padding: 0.5em 1em;
+  }
+
+  .form-input {
+    width: 90%;
+    margin-left: 5px;
+  }
+}
+
+/* Large devices (desktops, 768px and up) */
+@media only screen and (min-width: 768px) {
+  button {
+    width: auto;
+    padding: 0.6em 1.2em;
+  }
+
+  .form-input {
+    width: auto;
+    margin-left: 10px;
+  }
+}
