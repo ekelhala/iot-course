@@ -8,3 +8,5 @@ Listing of folders and their contents
 
 - `/lib` - Libraries needed for Pico to run the weather station
 - `src` - Micropython source code for Pico
+
+## REMEMBER TO ADD EMPTY TEMPLATE OF 'CONFIG.PY' 
