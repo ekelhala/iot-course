@@ -18,7 +18,7 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
     <Box textAlign="center" sx={{ m: 3 }}>
       <b>Maximum values during period</b>
       <TableContainer className="weather-table" component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Type</TableCell>
@@ -53,7 +53,7 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
 
       <b>Minimum values during period</b>
       <TableContainer className="weather-table" component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Type</TableCell>
