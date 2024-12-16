@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { scaleTime } from 'd3-scale'
 import { useEffect, useState } from 'react'
 import {
@@ -12,7 +12,6 @@ import {
 } from 'recharts'
 import WeatherDataPoint from '../types/WeatherDataPoint'
 import WeatherHistory from '../types/WeatherHistory'
-import { formatTimestamp } from '../utils'
 
 interface WeatherDataGraphProps {
   weatherHistory: WeatherHistory
@@ -65,24 +64,22 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
   if (domain) {
     return (
       <>
-        <Stack className="container-row" spacing={4} direction="row">
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Chart data</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={selectedWeatherData}
-              label="Weather data"
-              onChange={handleChange}
-            >
-              {Object.keys(weatherHistory).map((historyItem) => (
-                <MenuItem key={`history-selector-${historyItem}`} value={historyItem}>
-                  {historyItem}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Stack>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Chart data</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedWeatherData}
+            label="Weather data"
+            onChange={handleChange}
+          >
+            {Object.keys(weatherHistory).map((historyItem) => (
+              <MenuItem key={`history-selector-${historyItem}`} value={historyItem}>
+                {historyItem}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart
             className="weather-chart"
