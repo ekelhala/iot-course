@@ -41,6 +41,14 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
     return filteredDataPoints
   }
 
+  const timestampFormatter = (timestamp: any) => {
+    return new Date(timestamp).toLocaleString(undefined, {year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'})
+  }
+
   useEffect(() => {
     const filtered = thresholdFilter(weatherData)
     const numericValues = filtered.map((value) => new Date(value.timestamp).valueOf())
@@ -93,10 +101,10 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
                 .domain(domain)
                 .ticks(5)
                 .map((date) => date.valueOf())}
-              tickFormatter={formatTimestamp}
+              tickFormatter={timestampFormatter}
             />
             <YAxis />
-            <Tooltip labelFormatter={formatTimestamp} />
+            <Tooltip labelFormatter={timestampFormatter} />
             <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
           </LineChart>
         </ResponsiveContainer>
