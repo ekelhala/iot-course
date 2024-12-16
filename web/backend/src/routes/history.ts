@@ -37,7 +37,7 @@ const makeDBQuery = (start: string, end: string, type: string | null) => {
         // Match "timestamp"-property between startDate and endDate
         // Use ascending sorting and limit matches to one, 1st one will be picked, which will be the smallest
         return [
-          { $match: { timestamp: { $gt: startDate, $lt: endDate } } },
+          { $match: { timestamp: { $gte: startDate, $lte: endDate } } },
           { $sort: { value: 1 } },
           { $limit: 1 },
         ]
@@ -46,7 +46,7 @@ const makeDBQuery = (start: string, end: string, type: string | null) => {
         // Use descending sorting and limit matches to one, resulting in 1st one to be picked,
         // which is also the largest in the set
         return [
-          { $match: { timestamp: { $gt: startDate, $lt: endDate } } },
+          { $match: { timestamp: { $gte: startDate, $lte: endDate } } },
           { $sort: { value: -1 } },
           { $limit: 1 },
         ]
@@ -56,8 +56,8 @@ const makeDBQuery = (start: string, end: string, type: string | null) => {
           {
             $match: {
               timestamp: {
-                $gt: startDate,
-                $lt: endDate,
+                $gte: startDate,
+                $lte: endDate,
               },
             },
           },
