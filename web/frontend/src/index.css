@@ -1,11 +1,15 @@
 body {
-  display: flex;
   justify-content: center;
   font-family: Arial, sans-serif;
 }
 
 b {
   font-size: 1.5em;
+}
+
+.weather-chart {
+  align-items: center;
+  margin: 20px auto;
 }
 
 .container-row {

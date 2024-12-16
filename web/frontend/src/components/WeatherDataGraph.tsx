@@ -1,15 +1,15 @@
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-} from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material'
 import { scaleTime } from 'd3-scale'
 import { useEffect, useState } from 'react'
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import WeatherDataPoint from '../types/WeatherDataPoint'
 import WeatherHistory from '../types/WeatherHistory'
 import { formatTimestamp } from '../utils'
@@ -56,7 +56,7 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
 
   if (domain) {
     return (
-      <Box textAlign="center" sx={{ m: 3 }}>
+      <>
         <Stack className="container-row" spacing={4} direction="row">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Chart data</InputLabel>
@@ -75,30 +75,32 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
             </Select>
           </FormControl>
         </Stack>
-        <LineChart
-          width={600}
-          height={250}
-          data={filteredDataPoints.map((data) => {
-            return { timestamp: new Date(data.timestamp).valueOf(), value: data.value }
-          })}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="timestamp"
-            domain={domain}
-            scale="time"
-            type="number"
-            ticks={scaleTime()
-              .domain(domain)
-              .ticks(5)
-              .map((date) => date.valueOf())}
-            tickFormatter={formatTimestamp}
-          />
-          <YAxis />
-          <Tooltip labelFormatter={formatTimestamp} />
-          <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-        </LineChart>
-      </Box>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart
+            className="weather-chart"
+            margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
+            data={filteredDataPoints.map((data) => {
+              return { timestamp: new Date(data.timestamp).valueOf(), value: data.value }
+            })}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="timestamp"
+              domain={domain}
+              scale="time"
+              type="number"
+              ticks={scaleTime()
+                .domain(domain)
+                .ticks(5)
+                .map((date) => date.valueOf())}
+              tickFormatter={formatTimestamp}
+            />
+            <YAxis />
+            <Tooltip labelFormatter={formatTimestamp} />
+            <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </>
     )
   }
   return null

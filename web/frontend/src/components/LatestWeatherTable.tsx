@@ -17,7 +17,7 @@ const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
     <Box textAlign="center" sx={{ m: 3 }}>
       <b>Latest values</b>
       <TableContainer className="weather-table" component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Type</TableCell>

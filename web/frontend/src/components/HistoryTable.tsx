@@ -31,7 +31,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
       <b>Historical data</b>
 
       <TableContainer className="weather-table" component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Timestamp</TableCell>
@@ -55,7 +55,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
       </TableContainer>
 
       <TableContainer className="weather-table" component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Timestamp</TableCell>
@@ -79,7 +79,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
       </TableContainer>
 
       <TableContainer className="weather-table" component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Timestamp</TableCell>
@@ -103,7 +103,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
       </TableContainer>
 
       <TableContainer className="weather-table" component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Timestamp</TableCell>
