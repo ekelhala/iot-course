@@ -55,11 +55,11 @@ def publish(mqtt_client, topic, value):
 
 while True:
     publish(client, 'sensors/temperature_in', str(bmp.temperature))
-    publish(client, 'sensors/pressure', str(bmp.pressure))
+    pressure = (bmp.pressure / 100) # convert to hPa
+    publish(client, 'sensors/pressure', str(round(pressure, 2)))
     temp_out, humidity = sht.measure()
-    publish(client, 'sensors/temperature_out', str(round(temp_out, 2))) # for sht30
-    publish(client, 'sensors/humidity', str(round(humidity, 2))) # for sht30
+    publish(client, 'sensors/temperature_out', str(round(temp_out, 2)))
+    publish(client, 'sensors/humidity', str(round(humidity, 2)))
 
     # every 2s
     time.sleep(2)
-    
