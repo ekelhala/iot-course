@@ -1,9 +1,3 @@
-import { scaleTime } from 'd3-scale'
-import { useEffect, useState } from 'react'
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
-import WeatherDataPoint from '../types/WeatherDataPoint'
-import WeatherHistory from '../types/WeatherHistory'
-import { formatTimestamp } from '../utils'
 import {
   Box,
   FormControl,
@@ -13,6 +7,12 @@ import {
   SelectChangeEvent,
   Stack,
 } from '@mui/material'
+import { scaleTime } from 'd3-scale'
+import { useEffect, useState } from 'react'
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
+import WeatherDataPoint from '../types/WeatherDataPoint'
+import WeatherHistory from '../types/WeatherHistory'
+import { formatTimestamp } from '../utils'
 
 interface WeatherDataGraphProps {
   weatherHistory: WeatherHistory

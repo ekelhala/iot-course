@@ -16,10 +16,11 @@ b {
 
 .weather-table {
   border: 1px solid #ddd;
+  margin: 20px 0;
 }
 
 .weather-table thead {
-  background-color: #959595;
+  background-color: #9cc398;
 }
 
 .weather-table th,
@@ -30,7 +31,7 @@ b {
 }
 
 .weather-table tr:nth-child(even) {
-  background-color: #d4d4d4;
+  background-color: #d7e4d1;
 }
 
 .weather-table tr:hover {

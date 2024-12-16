@@ -65,7 +65,7 @@ const WeatherDateRangeSelector = ({
           onChange={(e) => setEndDate(e.target.value)}
         />
       </Stack>
-      <Stack spacing={2} direction="row">
+      <Stack spacing={2} direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={() => changeTimePeriod(1)}>
           1 hour
         </Button>
