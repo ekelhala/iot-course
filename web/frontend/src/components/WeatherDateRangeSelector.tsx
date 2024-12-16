@@ -1,3 +1,5 @@
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import { formatDateForInput } from '../utils'
 
 interface WeatherDateRangeSelectorProps {
@@ -25,18 +27,20 @@ const WeatherDateRangeSelector = ({
   }
 
   return (
-    <div className="container">
-      <div className="container-row space-between width-70">
+    <>
+      <Stack className="container-row" spacing={8} direction="row">
         <b>Weather history</b>
-        <button
+        <Button
+          color="primary"
+          variant="contained"
           onClick={() => {
             fetchLatestData()
           }}
         >
           Update
-        </button>
-      </div>
-      <div className="container-row space-between width-70">
+        </Button>
+      </Stack>
+      <Stack className="container-row" spacing={8} direction="row">
         <label className="form-label" htmlFor="startDate">
           Start Date
         </label>
@@ -47,8 +51,8 @@ const WeatherDateRangeSelector = ({
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
-      </div>
-      <div className="container-row space-between width-70">
+      </Stack>
+      <Stack className="container-row" spacing={8} direction="row">
         <label className="form-label" htmlFor="endDate">
           End Date
         </label>
@@ -59,15 +63,25 @@ const WeatherDateRangeSelector = ({
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
-      </div>
-      <div className="container-row">
-        <button onClick={() => changeTimePeriod(1)}>1 hour</button>
-        <button onClick={() => changeTimePeriod(24)}>1 day</button>
-        <button onClick={() => changeTimePeriod(7 * 24)}>1 week</button>
-        <button onClick={() => changeTimePeriod(30 * 24)}>1 month</button>
-        <button onClick={() => changeTimePeriod(365 * 24)}>1 year</button>
-      </div>
-    </div>
+      </Stack>
+      <Stack spacing={2} direction="row">
+        <Button variant="contained" onClick={() => changeTimePeriod(1)}>
+          1 hour
+        </Button>
+        <Button variant="contained" onClick={() => changeTimePeriod(24)}>
+          1 day
+        </Button>
+        <Button variant="contained" onClick={() => changeTimePeriod(7 * 24)}>
+          1 week
+        </Button>
+        <Button variant="contained" onClick={() => changeTimePeriod(30 * 24)}>
+          1 month
+        </Button>
+        <Button variant="contained" onClick={() => changeTimePeriod(365 * 24)}>
+          1 year
+        </Button>
+      </Stack>
+    </>
   )
 }
 

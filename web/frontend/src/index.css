@@ -74,14 +74,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.space-between {
-  justify-content: space-between;
-}
-
-.width-70 {
-  width: 70%;
-}
-
 .form-label {
   display: block;
   font-weight: bold;
