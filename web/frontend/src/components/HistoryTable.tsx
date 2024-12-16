@@ -95,7 +95,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
             {humidityHistory?.map((item, index) => (
               <TableRow key={`${item.timestamp}-${index}`}>
                 <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                <TableCell>{item.value}&deg;C</TableCell>
+                <TableCell>{item.value} %</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -119,7 +119,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
             {pressureHistory?.map((item, index) => (
               <TableRow key={`${item.timestamp}-${index}`}>
                 <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                <TableCell>{item.value}&deg;C</TableCell>
+                <TableCell>{item.value} hPa</TableCell>
               </TableRow>
             ))}
           </TableBody>
