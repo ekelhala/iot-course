@@ -1,5 +1,5 @@
 from machine import I2C, Timer, Pin
-#from sht30 import SHT30
+from sht30 import SHT30
 from bmp280 import BMP280
 from umqtt.simple import MQTTClient
 import network
@@ -45,8 +45,8 @@ client.connect()
 i2c = I2C(id=0, scl=Pin(1), sda=Pin(0))
 bmp = BMP280(i2c)
 print("BMP280 initialized")
-#sht = SHT30(i2c)
-#print("SHT30 initialized")
+sht = SHT30(i2c)
+print("SHT30 initialized")
 
 def publish(mqtt_client, topic, value):
     mqtt_client.publish(topic, value)
@@ -54,10 +54,11 @@ def publish(mqtt_client, topic, value):
 
 
 while True:
-    publish(client, 'sane_picow/temperature_in', str(bmp.temperature))
-    publish(client, 'sane_picow/pressure', str(bmp.pressure))
-    #publish(client, 'sane_picow/temperature_out', str()) # for sht30
-    #publish(client, 'sane_picow/humidity', str()) # for sht30
+    publish(client, 'sensors/temperature_in', str(bmp.temperature))
+    publish(client, 'sensors/pressure', str(bmp.pressure))
+    temp_out, humidity = sht.measure()
+    publish(client, 'sensors/temperature_out', str(round(temp_out, 2))) # for sht30
+    publish(client, 'sensors/humidity', str(round(humidity, 2))) # for sht30
 
     # every 2s
     time.sleep(2)
