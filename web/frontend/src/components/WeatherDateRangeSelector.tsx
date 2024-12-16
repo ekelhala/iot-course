@@ -28,7 +28,7 @@ const WeatherDateRangeSelector = ({
   }
 
   return (
-    <Box>
+    <Box sx={{ m: 3 }}>
       <Stack className="container-row" spacing={8} direction="row">
         <b>Weather history</b>
         <Button
@@ -65,7 +65,7 @@ const WeatherDateRangeSelector = ({
           onChange={(e) => setEndDate(e.target.value)}
         />
       </Stack>
-      <Stack spacing={2} direction="row" justifyContent="space-between">
+      <Stack spacing={3} direction="row" justifyContent="center">
         <Button variant="contained" onClick={() => changeTimePeriod(1)}>
           1 hour
         </Button>

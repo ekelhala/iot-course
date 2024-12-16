@@ -56,7 +56,7 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
 
   if (domain) {
     return (
-      <Box>
+      <Box sx={{ m: 3 }}>
         <Stack className="container-row" spacing={4} direction="row">
           <b>Chart</b>
           <FormControl fullWidth>
