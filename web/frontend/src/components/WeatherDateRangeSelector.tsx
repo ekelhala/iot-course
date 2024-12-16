@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { formatDateForInput } from '../utils'
@@ -27,7 +28,7 @@ const WeatherDateRangeSelector = ({
   }
 
   return (
-    <>
+    <Box>
       <Stack className="container-row" spacing={8} direction="row">
         <b>Weather history</b>
         <Button
@@ -81,7 +82,7 @@ const WeatherDateRangeSelector = ({
           1 year
         </Button>
       </Stack>
-    </>
+    </Box>
   )
 }
 

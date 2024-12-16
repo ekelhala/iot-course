@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import WeatherHistory from '../types/WeatherHistory'
 import { formatTimestamp } from '../utils'
 
@@ -19,7 +20,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
   const pressureHistory = sortWeatherHistory(weatherHistory.pressure)
 
   return (
-    <div className="container">
+    <Box>
       <p>Historical data</p>
       <table className="weather-table">
         <thead>
@@ -105,7 +106,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
           ))}
         </tbody>
       </table>
-    </div>
+    </Box>
   )
 }
 

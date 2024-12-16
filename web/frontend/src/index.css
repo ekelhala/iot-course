@@ -2,17 +2,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  /*text-align: center;*/
   margin: 0 auto;
   font-family: Arial, sans-serif;
 }
 
-.container {
-  text-align: center;
-  margin: 20px auto;
+b {
+  font-size: 1.5em;
 }
 
 .container-row {
-  display: flex;
   justify-content: center;
   align-items: center;
   margin: 10px auto;
@@ -46,10 +45,6 @@ body {
 
 .weather-table tr:hover {
   background-color: #b9b9b9;
-}
-
-b {
-  font-size: 1.5em;
 }
 
 button {

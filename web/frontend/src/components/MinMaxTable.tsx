@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import WeatherDataMinMax from '../types/WeatherDataMinMax'
 import { formatTimestamp } from '../utils'
 
@@ -7,7 +8,7 @@ interface MinMaxTableProps {
 
 const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
   return (
-    <div className="container">
+    <Box>
       <p>Maximum values during period</p>
       <table className="weather-table">
         <thead>
@@ -68,7 +69,7 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
           })}
         </tbody>
       </table>
-    </div>
+    </Box>
   )
 }
 

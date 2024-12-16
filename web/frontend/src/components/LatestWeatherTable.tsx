@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import WeatherData from '../types/WeatherData'
 
 interface LatestWeatherTableProps {
@@ -6,7 +7,7 @@ interface LatestWeatherTableProps {
 
 const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
   return (
-    <div className="container">
+    <Box>
       <b>Latest weather data</b>
       <table className="weather-table">
         <tbody>
@@ -28,7 +29,7 @@ const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
           </tr>
         </tbody>
       </table>
-    </div>
+    </Box>
   )
 }
 
