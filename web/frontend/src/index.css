@@ -47,3 +47,90 @@ body {
 .weather-table tr:hover {
   background-color: #b9b9b9;
 }
+
+b {
+  font-size: 1.5em;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid gray;
+  padding: 0.6em 1.2em;
+  margin: 0.5em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #539455;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+  scale: 1.05;
+  transition: scale 0.25s;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.width-70 {
+  width: 70%;
+}
+
+.form-label {
+  display: block;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-input {
+  padding: 12px;
+  margin-left: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  button {
+    width: 40%;
+    padding: 0.5em;
+  }
+
+  .form-input {
+    width: 70%;
+  }
+}
+
+/* Medium devices (tablets, 600px to 768px) */
+@media only screen and (min-width: 600px) and (max-width: 768px) {
+  button {
+    width: auto;
+    padding: 0.5em 1em;
+  }
+
+  .form-input {
+    width: 90%;
+    margin-left: 5px;
+  }
+}
+
+/* Large devices (desktops, 768px and up) */
+@media only screen and (min-width: 768px) {
+  button {
+    width: auto;
+    padding: 0.6em 1.2em;
+  }
+
+  .form-input {
+    width: auto;
+    margin-left: 10px;
+  }
+}
