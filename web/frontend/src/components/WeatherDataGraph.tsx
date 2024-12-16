@@ -41,11 +41,13 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
   }
 
   const timestampFormatter = (timestamp: any) => {
-    return new Date(timestamp).toLocaleString(undefined, {year: '2-digit',
+    return new Date(timestamp).toLocaleString(undefined, {
+      year: '2-digit',
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'})
+      minute: '2-digit',
+    })
   }
 
   useEffect(() => {
