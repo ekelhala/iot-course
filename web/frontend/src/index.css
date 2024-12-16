@@ -1,7 +1,54 @@
 body {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin: 0 auto;
   font-family: Arial, sans-serif;
+}
+
+b {
+  font-size: 1.5em;
+}
+
+.container-row {
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+}
+
+.weather-table {
+  border: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+.weather-table thead {
+  background-color: #9cc398;
+}
+
+.weather-table th,
+.weather-table td {
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.weather-table tr:nth-child(even) {
+  background-color: #d7e4d1;
+}
+
+.weather-table tr:hover {
+  background-color: #b9b9b9;
+}
+
+.form-label {
+  display: block;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-input {
+  padding: 12px;
+  margin-left: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
 }

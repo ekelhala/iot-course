@@ -2,19 +2,20 @@ import axios from 'axios'
 import { format } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
-import './App.css'
+import HistoryTable from './components/HistoryTable'
+import LatestWeatherTable from './components/LatestWeatherTable'
+import MinMaxTable from './components/MinMaxTable'
+import WeatherDataGraph from './components/WeatherDataGraph'
+import WeatherDateRangeSelector from './components/WeatherDateRangeSelector'
 import { API_URL, WS_URL } from './constants'
 import historyService from './services/history'
 import sensorService from './services/sensors'
 import WeatherData from './types/WeatherData'
-import WeatherHistory from './types/WeatherHistory'
 import WeatherDataMinMax from './types/WeatherDataMinMax'
+import WeatherHistory from './types/WeatherHistory'
+import { formatDateForInput } from './utils'
 
 function App() {
-  const formatDateForInput = (date: Date): string => {
-    return format(date, "yyyy-MM-dd'T'HH:mm")
-  }
-
   // First day of the year
   const initialStartDate = formatDateForInput(new Date(new Date().getFullYear(), 0, 1))
 
@@ -89,213 +90,30 @@ function App() {
     setWeatherDataMinMax({ max, min })
   }
 
+  const fetchLatestData = async () => {
+    await getLatestSensorData()
+    await getWeatherHistoryData()
+    await getMinMaxWeatherData()
+  }
+
   useEffect(() => {
-    getLatestSensorData()
-    getWeatherHistoryData()
-    getMinMaxWeatherData()
-  }, [])
-
-  // Converts a date and time to a string by using the current or specified locale
-  const formatTimestamp = (timestamp: Date) => {
-    return new Date(timestamp).toLocaleString()
-  }
-
-  // Sorts the weather history by timestamp in descending order
-  const sortWeatherHistory = (weatherHistory: { value: number; timestamp: Date }[]) => {
-    return weatherHistory?.sort(
-      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    )
-  }
-
-  const temperatureInHistory = sortWeatherHistory(weatherHistory.temperature_in)
-  const temperatureOutHistory = sortWeatherHistory(weatherHistory.temperature_out)
-  const humidityHistory = sortWeatherHistory(weatherHistory.humidity)
-  const pressureHistory = sortWeatherHistory(weatherHistory.pressure)
+    fetchLatestData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate, endDate])
 
   return (
     <>
-      <div className="container">
-        <b>Latest weather data</b>
-        <table className="weather-table">
-          <tbody>
-            <tr>
-              <td>temperature_in</td>
-              <td>{weatherDataLatest.temperature_in?.value}&deg;C</td>
-            </tr>
-            <tr>
-              <td>temperature_out</td>
-              <td>{weatherDataLatest.temperature_out?.value}&deg;C</td>
-            </tr>
-            <tr>
-              <td>humidity</td>
-              <td>{weatherDataLatest.humidity?.value}%</td>
-            </tr>
-            <tr>
-              <td>pressure</td>
-              <td>{weatherDataLatest.pressure?.value} hPa</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div className="container">
-        <div className="container-row">
-          <b>Weather history</b>
-          <button onClick={getWeatherHistoryData}>Update</button>
-        </div>
-        <div className="container-row">
-          <label className="form-label" htmlFor="startDate">
-            Start Date
-          </label>
-          <input
-            className="form-input"
-            type="datetime-local"
-            id="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
-        <div className="container-row">
-          <label className="form-label" htmlFor="endDate">
-            End Date
-          </label>
-          <input
-            className="form-input"
-            type="datetime-local"
-            id="endDate"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-        </div>
-        <p>Maximum values during period</p>
-
-        <table className="weather-table">
-          <thead>
-            <tr>
-              <th>type</th>
-              <th>value</th>
-              <th>timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(weatherDataMinMax.max).map((dataType: string) => {
-              return (
-                <tr key={`max-${dataType}`}>
-                  <td>{dataType}</td>
-                  <td>{weatherDataMinMax.max[dataType].value}</td>
-                  <td>{formatTimestamp(weatherDataMinMax.max[dataType].timestamp)}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-        <p>Minimum values during period</p>
-        <table className="weather-table">
-          <thead>
-            <tr>
-              <th>type</th>
-              <th>value</th>
-              <th>timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(weatherDataMinMax.min).map((dataType: string) => {
-              return (
-                <tr key={`min-${dataType}`}>
-                  <td>{dataType}</td>
-                  <td>{weatherDataMinMax.min[dataType].value}</td>
-                  <td>{formatTimestamp(weatherDataMinMax.min[dataType].timestamp)}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-
-        <p>Historical data</p>
-        <table className="weather-table">
-          <thead>
-            <tr>
-              <th>timestamp</th>
-              <th>temperature_in</th>
-            </tr>
-          </thead>
-          <tbody>
-            {temperatureInHistory.length === 0 && (
-              <tr>
-                <td colSpan={2}>No data available</td>
-              </tr>
-            )}
-            {temperatureInHistory?.map((item, index) => (
-              <tr key={`${item.timestamp}-${index}`}>
-                <td>{formatTimestamp(item.timestamp)}</td>
-                <td>{item.value}&deg;C</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <table className="weather-table">
-          <thead>
-            <tr>
-              <th>timestamp</th>
-              <th>temperature_out</th>
-            </tr>
-          </thead>
-          <tbody>
-            {temperatureOutHistory.length === 0 && (
-              <tr>
-                <td colSpan={2}>No data available</td>
-              </tr>
-            )}
-            {temperatureOutHistory?.map((item, index) => (
-              <tr key={`${item.timestamp}-${index}`}>
-                <td>{formatTimestamp(item.timestamp)}</td>
-                <td>{item.value}&deg;C</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <table className="weather-table">
-          <thead>
-            <tr>
-              <th>timestamp</th>
-              <th>humidity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {humidityHistory.length === 0 && (
-              <tr>
-                <td colSpan={2}>No data available</td>
-              </tr>
-            )}
-            {humidityHistory?.map((item, index) => (
-              <tr key={`${item.timestamp}-${index}`}>
-                <td>{formatTimestamp(item.timestamp)}</td>
-                <td>{item.value}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <table className="weather-table">
-          <thead>
-            <tr>
-              <th>timestamp</th>
-              <th>pressure</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pressureHistory.length === 0 && (
-              <tr>
-                <td colSpan={2}>No data available</td>
-              </tr>
-            )}
-            {pressureHistory?.map((item, index) => (
-              <tr key={`${item.timestamp}-${index}`}>
-                <td>{formatTimestamp(item.timestamp)}</td>
-                <td>{item.value} hPa</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <LatestWeatherTable weatherDataLatest={weatherDataLatest} />
+      <WeatherDateRangeSelector
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        fetchLatestData={fetchLatestData}
+      />
+      <WeatherDataGraph weatherHistory={weatherHistory} />
+      <MinMaxTable weatherDataMinMax={weatherDataMinMax} />
+      <HistoryTable weatherHistory={weatherHistory} />
     </>
   )
 }
