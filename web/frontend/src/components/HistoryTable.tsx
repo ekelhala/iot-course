@@ -21,7 +21,7 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
 
   return (
     <Box>
-      <p>Historical data</p>
+      <b>Historical data</b>
       <table className="weather-table">
         <thead>
           <tr>
