@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { format } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import HistoryTable from './components/HistoryTable'
@@ -71,8 +70,8 @@ function App() {
   }
 
   const getWeatherHistoryData = async () => {
-    const startDateFormatted = format(new Date(startDate), 'yyyy-MM-dd')
-    const endDateFormatted = format(new Date(endDate), 'yyyy-MM-dd')
+    const startDateFormatted = new Date(startDate).toISOString()
+    const endDateFormatted = new Date(endDate).toISOString()
     console.log(startDateFormatted, endDateFormatted)
 
     historyService.getAll(startDateFormatted, endDateFormatted).then((data) => {
@@ -82,8 +81,8 @@ function App() {
   }
 
   const getMinMaxWeatherData = async () => {
-    const startDateFormatted = format(new Date(startDate), 'yyyy-MM-dd')
-    const endDateFormatted = format(new Date(endDate), 'yyyy-MM-dd')
+    const startDateFormatted = new Date(startDate).toISOString()
+    const endDateFormatted = new Date(endDate).toISOString()
 
     const max = await historyService.getMax(startDateFormatted, endDateFormatted)
     const min = await historyService.getMin(startDateFormatted, endDateFormatted)
