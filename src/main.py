@@ -6,6 +6,7 @@ import network
 import time
 import ssl
 import config # will have to import outside of git
+import ntptime
 
 # setting up wifi
 ssid = config.ssid
@@ -33,11 +34,20 @@ else:
     network_info = wlan.ifconfig()
     print('[INFO] IP address:', network_info[0])
 
-context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-context.verify_mode = ssl.CERT_NONE # NOTE: change to CERT_REQUIRED for cert verification
+# Connected, set time using ntptime
+ntptime.settime()
 
-client = MQTTClient(client_id=b'sane_picow', server=config.MQTT_BROKER, port=config.MQTT_PORT,
-                    user=config.MQTT_USER, password=config.MQTT_PWD, ssl=context)
+# load the cert
+with open('hivemq-com-chain.der', 'rb') as f:
+    cacert = f.read()
+
+# we are using an older version of Pico firmware, so SSL behaves differently than in examples
+# first, we construct these params with the cert and hostname
+ssl_params = {'server_side':False, 'key':None, 'cert':None, 'cadata':cacert, 'cert_reqs':ssl.CERT_REQUIRED, 'server_hostname': config.MQTT_BROKER}
+
+# then we set ssl to True and set our params
+client = MQTTClient(client_id=b'picow', server=config.MQTT_BROKER, port=config.MQTT_PORT,
+                    user=config.MQTT_USER, password=config.MQTT_PWD, ssl=True, ssl_params=ssl_params)
 client.connect()
 
 # TODO: Add SHT30 configs

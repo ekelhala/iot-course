@@ -16,6 +16,8 @@ Listing of folders and their contents
 
 ## Configuration setup for Pico
 
+**NOTE:** You need to use [this](https://micropython.org/resources/firmware/RPI_PICO_W-20231005-v1.21.0.uf2) firmware for the Pico in order to get the SSL working correctly
+
 1. Copy the `config.template.py` file to `config.py`:
 
    ```bash
