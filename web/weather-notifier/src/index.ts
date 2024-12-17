@@ -19,7 +19,6 @@ const redisSubscriber = createClient({
 redisSubscriber.on('connect', () => {
   console.log('subscriber connected')
   redisSubscriber.subscribe('new_value', (message) => {
-    console.log(new Date().toISOString())
     // When a message is received, we loop through each connected WebSocket client
     wss.clients.forEach((client) => {
       // Checking if the connection is open, if it is, we send the API endpoint
