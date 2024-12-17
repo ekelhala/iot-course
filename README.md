@@ -43,3 +43,11 @@ Listing of folders and their contents
    MQTT_USER = ''  # MQTT username
    MQTT_PWD = ''   # MQTT password
    ```
+
+4. Upload the files to Pico.
+
+- `/lib` folder
+- main.py
+- config.py
+
+5. Run `main.py` with Thonny IDE or other MicroPython IDE.
