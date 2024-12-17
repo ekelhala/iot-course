@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import WeatherData from '../types/WeatherData'
+import { formatTimestamp } from '../utils'
 
 interface LatestWeatherTableProps {
   weatherDataLatest: WeatherData
@@ -32,28 +33,28 @@ const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
               </TableCell>
               <TableCell align="left">{weatherDataLatest.temperature_in?.value}&deg;C</TableCell>
               <TableCell align="left">
-                {weatherDataLatest.temperature_in?.timestamp.toLocaleString()}
+                {formatTimestamp(weatherDataLatest.temperature_in?.timestamp)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>temperature_out</TableCell>
               <TableCell align="left">{weatherDataLatest.temperature_out?.value}&deg;C</TableCell>
               <TableCell align="left">
-                {weatherDataLatest.temperature_out?.timestamp.toLocaleString()}
+                {formatTimestamp(weatherDataLatest.temperature_out?.timestamp)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>humidity</TableCell>
               <TableCell align="left">{weatherDataLatest.humidity?.value} %</TableCell>
               <TableCell align="left">
-                {weatherDataLatest.humidity?.timestamp.toLocaleString()}
+                {formatTimestamp(weatherDataLatest.humidity?.timestamp)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>pressure</TableCell>
               <TableCell align="left">{weatherDataLatest.pressure?.value} hPa</TableCell>
               <TableCell align="left">
-                {weatherDataLatest.pressure?.timestamp.toLocaleString()}
+                {formatTimestamp(weatherDataLatest.pressure?.timestamp)}
               </TableCell>
             </TableRow>
           </TableBody>
