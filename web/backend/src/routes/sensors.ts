@@ -55,6 +55,7 @@ router.get('/temperature_out', async (req, res) => {
 })
 
 router.get('/temperature_in', async (req, res) => {
+  console.log(new Date().toISOString())
   res.json(await getValueFromCache(TEMPERATURE_IN))
 })
 
