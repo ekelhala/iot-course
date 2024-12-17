@@ -1,37 +1,65 @@
-from machine import I2C, Timer
+from machine import I2C, Timer, Pin
 from sht30 import SHT30
 from bmp280 import BMP280
+from umqtt.simple import MQTTClient
+import network
+import time
+import ssl
+import config # will have to import outside of git
 
-i2c = I2C(id=0, scl=5, sda=4)
-sht = SHT30(i2c)
-print("SHT30 initialized!")
+# setting up wifi
+ssid = config.ssid
+password = config.pwd
+
+# NOTE: use hotspotted wifi
+# connecing to wifi 
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+
+connection_timeout = 10
+while connection_timeout > 0:
+    if wlan.status() == 3: # connected/ip obtained
+        break
+    connection_timeout -= 1
+    print('Waiting for Wi-Fi connection...')
+    time.sleep(1)
+
+# check if connection successful
+if wlan.status() != 3: 
+    raise RuntimeError('[ERROR] Failed to establish a network connection')
+else:
+    print('[INFO] CONNECTED SUCCESSFULLY')
+    network_info = wlan.ifconfig()
+    print('[INFO] IP address:', network_info[0])
+
+context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+context.verify_mode = ssl.CERT_NONE # NOTE: change to CERT_REQUIRED for cert verification
+
+client = MQTTClient(client_id=b'sane_picow', server=config.MQTT_BROKER, port=config.MQTT_PORT,
+                    user=config.MQTT_USER, password=config.MQTT_PWD, ssl=context)
+client.connect()
+
+# TODO: Add SHT30 configs
+# config sensors and i2c
+i2c = I2C(id=0, scl=Pin(1), sda=Pin(0))
 bmp = BMP280(i2c)
 print("BMP280 initialized")
+sht = SHT30(i2c)
+print("SHT30 initialized")
 
-TEMP_OUT = 'temp_out'
-TEMP_IN = 'temp_in'
-PRESSURE = 'pressure'
-HUMIDITY = 'humidity'
+def publish(mqtt_client, topic, value):
+    mqtt_client.publish(topic, value)
+    print("[INFO][PUB] Published {} to {} topic".format(value, topic))
 
-sensorValues = {
-    TEMP_OUT: 0,
-    TEMP_IN: 0,
-    PRESSURE: 0,
-    HUMIDITY: 0
-    }
 
-def readSensors(timer):
-    sensorValues[TEMP_OUT], sensorValues[HUMIDITY] = sht.measure()
-    sensorValues[TEMP_IN] = bmp.temperature
-    sensorValues[PRESSURE] = bmp.pressure
+while True:
+    publish(client, 'sensors/temperature_in', str(bmp.temperature))
+    pressure = (bmp.pressure / 100) # convert to hPa
+    publish(client, 'sensors/pressure', str(round(pressure, 2)))
+    temp_out, humidity = sht.measure()
+    publish(client, 'sensors/temperature_out', str(round(temp_out, 2)))
+    publish(client, 'sensors/humidity', str(round(humidity, 2)))
 
-def printSensorValues(timer):
-    print("Temperature out: {:.2f} C".format(sensorValues[TEMP_OUT]))
-    print("Humidity: {:.2f} %".format(sensorValues[HUMIDITY]))
-    print("Temperature in: {:.2f} C".format(sensorValues[TEMP_IN]))
-    print("Pressure: {:.2f} Pa\n".format(sensorValues[PRESSURE]))
-
-# read sensors every half a second
-Timer().init(period=500, callback=readSensors)
-# print sensor values every two seconds, could do some averaging in meantime
-Timer().init(period=2000, callback=printSensorValues)
+    # every 2s
+    time.sleep(2)
