@@ -22,6 +22,7 @@ const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
             <TableRow>
               <TableCell align="left">Type</TableCell>
               <TableCell align="left">Value</TableCell>
+              <TableCell align="left">Timestamp</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -30,18 +31,30 @@ const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
                 temperature_in
               </TableCell>
               <TableCell align="left">{weatherDataLatest.temperature_in?.value}&deg;C</TableCell>
+              <TableCell align="left">
+                {weatherDataLatest.temperature_in?.timestamp.toLocaleString()}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>temperature_out</TableCell>
               <TableCell align="left">{weatherDataLatest.temperature_out?.value}&deg;C</TableCell>
+              <TableCell align="left">
+                {weatherDataLatest.temperature_out?.timestamp.toLocaleString()}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>humidity</TableCell>
               <TableCell align="left">{weatherDataLatest.humidity?.value} %</TableCell>
+              <TableCell align="left">
+                {weatherDataLatest.humidity?.timestamp.toLocaleString()}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>pressure</TableCell>
               <TableCell align="left">{weatherDataLatest.pressure?.value} hPa</TableCell>
+              <TableCell align="left">
+                {weatherDataLatest.pressure?.timestamp.toLocaleString()}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
