@@ -38,19 +38,29 @@ else:
 ntptime.settime()
 
 # load the cert
-with open('hivemq-com-chain.der', 'rb') as f:
-    cacert = f.read()
+# you need to include "hivemq-com-chain.der" to / in Pico
+print("[INFO] reading the certificate...")
+try:
+    with open('hivemq-com-chain.der', 'rb') as f:
+        cert = f.read()
+except Exception:
+    raise RuntimeError("[ERROR] reading certificate failed, are you sure you have the right file in right place?")
+print("[INFO] certificate read successfully")
 
 # we are using an older version of Pico firmware, so SSL behaves differently than in examples
 # first, we construct these params with the cert and hostname
-ssl_params = {'server_side':False, 'key':None, 'cert':None, 'cadata':cacert, 'cert_reqs':ssl.CERT_REQUIRED, 'server_hostname': config.MQTT_BROKER}
-
+ssl_params = {'server_side':False,
+              'key':None,
+              'cert':None,
+              'cadata':cert,
+              'cert_reqs':ssl.CERT_REQUIRED,
+              'server_hostname': config.MQTT_BROKER}
+print("[INFO] setting connection params...")
 # then we set ssl to True and set our params
 client = MQTTClient(client_id=b'picow', server=config.MQTT_BROKER, port=config.MQTT_PORT,
                     user=config.MQTT_USER, password=config.MQTT_PWD, ssl=True, ssl_params=ssl_params)
 client.connect()
-
-# TODO: Add SHT30 configs
+print("[INFO] connected!")
 # config sensors and i2c
 i2c = I2C(id=0, scl=Pin(1), sda=Pin(0))
 bmp = BMP280(i2c)
