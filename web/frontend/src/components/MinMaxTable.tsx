@@ -57,9 +57,7 @@ const MinMaxTable = ({ weatherDataMinMax, startDate, endDate }: MinMaxTableProps
               return (
                 <TableRow key={`max-${dataType}`}>
                   <TableCell>{dataType}</TableCell>
-                  <TableCell>
-                    {weatherDataMinMax.max[dataType].value} {weatherDataMinMax.max[dataType].unit}
-                  </TableCell>
+                  <TableCell>{weatherDataMinMax.max[dataType].value}</TableCell>
                   <TableCell>
                     {formatTimestamp(weatherDataMinMax.max[dataType].timestamp)}
                   </TableCell>
@@ -97,9 +95,7 @@ const MinMaxTable = ({ weatherDataMinMax, startDate, endDate }: MinMaxTableProps
               return (
                 <TableRow key={`min-${dataType}`}>
                   <TableCell>{dataType}</TableCell>
-                  <TableCell>
-                    {weatherDataMinMax.min[dataType].value} {weatherDataMinMax.max[dataType].unit}
-                  </TableCell>
+                  <TableCell>{weatherDataMinMax.min[dataType].value}</TableCell>
                   <TableCell>
                     {formatTimestamp(weatherDataMinMax.min[dataType].timestamp)}
                   </TableCell>

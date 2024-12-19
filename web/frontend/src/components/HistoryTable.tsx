@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import WeatherDataPoint from '../types/WeatherDataPoint'
 import WeatherHistory from '../types/WeatherHistory'
 import { formatTimestamp } from '../utils'
 
@@ -15,8 +16,8 @@ interface HistoryTableProps {
 
 const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
   // Sorts the weather history by timestamp in descending order
-  const sortWeatherHistory = (weatherHistory: { value: number; timestamp: Date }[]) => {
-    return weatherHistory?.sort(
+  const sortWeatherHistory = (weatherDataPoint: WeatherDataPoint[]) => {
+    return weatherDataPoint?.sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     )
   }
@@ -68,10 +69,34 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
             {temperatureInHistory?.map((temperatureIn, index) => (
               <TableRow key={`${temperatureIn.timestamp}-${index}`}>
                 <TableCell>{formatTimestamp(temperatureIn.timestamp)}</TableCell>
-                <TableCell>{temperatureIn.value} &deg;C</TableCell>
-                <TableCell>{temperatureOutHistory[index]?.value ?? 'N/A'} &deg;C</TableCell>
-                <TableCell>{humidityHistory[index]?.value ?? 'N/A'} %</TableCell>
-                <TableCell>{pressureHistory[index]?.value ?? 'N/A'} hPa</TableCell>
+                <TableCell>
+                  {temperatureIn.value !== undefined ? (
+                    <span>{temperatureIn.value} &deg;C</span>
+                  ) : (
+                    <span style={{ color: 'red' }}>N/A</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {temperatureOutHistory[index]?.value !== undefined ? (
+                    <span>{temperatureOutHistory[index]?.value} &deg;C</span>
+                  ) : (
+                    <span style={{ color: 'red' }}>N/A</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {humidityHistory[index]?.value !== undefined ? (
+                    <span>{humidityHistory[index]?.value} %</span>
+                  ) : (
+                    <span style={{ color: 'red' }}>N/A</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {pressureHistory[index]?.value !== undefined ? (
+                    <span>{pressureHistory[index]?.value} hPa</span>
+                  ) : (
+                    <span style={{ color: 'red' }}>N/A</span>
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
