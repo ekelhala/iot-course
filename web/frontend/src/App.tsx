@@ -111,7 +111,7 @@ function App() {
         fetchLatestData={fetchLatestData}
       />
       <WeatherDataGraph weatherHistory={weatherHistory} />
-      <MinMaxTable weatherDataMinMax={weatherDataMinMax} />
+      <MinMaxTable weatherDataMinMax={weatherDataMinMax} startDate={startDate} endDate={endDate} />
       <HistoryTable weatherHistory={weatherHistory} />
     </>
   )
