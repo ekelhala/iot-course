@@ -6,7 +6,6 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import WeatherDataPoint from '../types/WeatherDataPoint'
 import WeatherHistory from '../types/WeatherHistory'
 import { formatTimestamp } from '../utils'
 
@@ -15,40 +14,50 @@ interface HistoryTableProps {
 }
 
 const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
+  // Collect all unique timestamps from the weather history
+  const timestamps = new Set<string>()
+  Object.values(weatherHistory).forEach((dataArray) => {
+    dataArray.forEach((weatherData) => {
+      //const formattedTimestamp = formatISODate(weatherData.timestamp)
+      const formattedTimestamp = new Date(weatherData.timestamp).toISOString()
+      if (!timestamps.has(formattedTimestamp)) {
+        timestamps.add(formattedTimestamp)
+      }
+    })
+  })
+
   // Sorts the weather history by timestamp in descending order
-  const sortWeatherHistory = (weatherDataPoint: WeatherDataPoint[]) => {
-    return weatherDataPoint?.sort(
-      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    )
-  }
+  const sortedTimestamps = Array.from(timestamps).sort(
+    (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  )
 
-  const temperatureInHistory = sortWeatherHistory(weatherHistory.temperature_in)
-  const temperatureOutHistory = sortWeatherHistory(weatherHistory.temperature_out)
-  const humidityHistory = sortWeatherHistory(weatherHistory.humidity)
-  const pressureHistory = sortWeatherHistory(weatherHistory.pressure)
+  console.log('sortedTimestamps:', sortedTimestamps)
+  console.log(sortedTimestamps)
 
-  const latestTimeStamp = formatTimestamp(temperatureInHistory[0]?.timestamp, {
+  const latestTimeStamp = formatTimestamp(new Date(sortedTimestamps[0]), {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
   })
 
-  const oldestTimeStamp = formatTimestamp(
-    temperatureInHistory[temperatureInHistory.length - 1]?.timestamp,
-    {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    }
-  )
+  const oldestTimeStamp = formatTimestamp(new Date(sortedTimestamps[sortedTimestamps.length - 1]), {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  })
 
   return (
     <Box textAlign="center" sx={{ m: 3 }}>
-      <b>Historical data: {temperatureInHistory.length} rows</b>
-      <p>
-        {oldestTimeStamp} - {latestTimeStamp}
-      </p>
-
+      {sortedTimestamps.length === 1 ? (
+        <b>Historical data: 1 row</b>
+      ) : (
+        <b>Historical data: {sortedTimestamps.length} rows</b>
+      )}
+      {sortedTimestamps.length > 0 && (
+        <p>
+          {oldestTimeStamp} - {latestTimeStamp}
+        </p>
+      )}
       <TableContainer className="weather-table" component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
@@ -61,44 +70,81 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {temperatureInHistory.length === 0 && (
+            {sortedTimestamps.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5}>No data available</TableCell>
+                <TableCell align="center" colSpan={5}>
+                  No data available
+                </TableCell>
               </TableRow>
             )}
-            {temperatureInHistory?.map((temperatureIn, index) => (
-              <TableRow key={`${temperatureIn.timestamp}-${index}`}>
-                <TableCell>{formatTimestamp(temperatureIn.timestamp)}</TableCell>
-                <TableCell>
-                  {temperatureIn.value !== undefined ? (
-                    <span>{temperatureIn.value} &deg;C</span>
-                  ) : (
-                    <span style={{ color: 'red' }}>N/A</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {temperatureOutHistory[index]?.value !== undefined ? (
-                    <span>{temperatureOutHistory[index]?.value} &deg;C</span>
-                  ) : (
-                    <span style={{ color: 'red' }}>N/A</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {humidityHistory[index]?.value !== undefined ? (
-                    <span>{humidityHistory[index]?.value} %</span>
-                  ) : (
-                    <span style={{ color: 'red' }}>N/A</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {pressureHistory[index]?.value !== undefined ? (
-                    <span>{pressureHistory[index]?.value} hPa</span>
-                  ) : (
-                    <span style={{ color: 'red' }}>N/A</span>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
+            {sortedTimestamps.map((timestamp) => {
+              const date = new Date(timestamp)
+              const normalizedDateWithoutMilliSeconds = new Date(date.setMilliseconds(0))
+
+              const temperatureIn = weatherHistory.temperature_in.find(
+                (data) =>
+                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
+                  normalizedDateWithoutMilliSeconds.getTime()
+              )
+              const temperatureOut = weatherHistory.temperature_out.find(
+                (data) =>
+                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
+                  normalizedDateWithoutMilliSeconds.getTime()
+              )
+              const humidity = weatherHistory.humidity.find(
+                (data) =>
+                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
+                  normalizedDateWithoutMilliSeconds.getTime()
+              )
+              const pressure = weatherHistory.pressure.find(
+                (data) =>
+                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
+                  normalizedDateWithoutMilliSeconds.getTime()
+              )
+
+              return (
+                <TableRow key={timestamp}>
+                  <TableCell>
+                    {formatTimestamp(date, {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    {temperatureIn ? (
+                      <span>{temperatureIn.value} &deg;C</span>
+                    ) : (
+                      <span style={{ color: 'red' }}>N/A</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {temperatureOut ? (
+                      <span>{temperatureOut.value} &deg;C</span>
+                    ) : (
+                      <span style={{ color: 'red' }}>N/A</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {humidity ? (
+                      <span>{humidity.value} %</span>
+                    ) : (
+                      <span style={{ color: 'red' }}>N/A</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {pressure ? (
+                      <span>{pressure.value} hPa</span>
+                    ) : (
+                      <span style={{ color: 'red' }}>N/A</span>
+                    )}
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>
