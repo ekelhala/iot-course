@@ -16,10 +16,13 @@ interface HistoryTableProps {
 const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
   // Collect all unique timestamps from the weather history
   const timestamps = new Set<string>()
+
   Object.values(weatherHistory).forEach((dataArray) => {
     dataArray.forEach((weatherData) => {
-      //const formattedTimestamp = formatISODate(weatherData.timestamp)
-      const formattedTimestamp = new Date(weatherData.timestamp).toISOString()
+      // Remove milliseconds from the timestamp
+      const formattedTimestamp = new Date(
+        new Date(weatherData.timestamp).setMilliseconds(0)
+      ).toISOString()
       if (!timestamps.has(formattedTimestamp)) {
         timestamps.add(formattedTimestamp)
       }
@@ -30,9 +33,6 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
   const sortedTimestamps = Array.from(timestamps).sort(
     (a, b) => new Date(b).getTime() - new Date(a).getTime()
   )
-
-  console.log('sortedTimestamps:', sortedTimestamps)
-  console.log(sortedTimestamps)
 
   const latestTimeStamp = formatTimestamp(new Date(sortedTimestamps[0]), {
     year: 'numeric',
@@ -79,27 +79,27 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
             )}
             {sortedTimestamps.map((timestamp) => {
               const date = new Date(timestamp)
-              const normalizedDateWithoutMilliSeconds = new Date(date.setMilliseconds(0))
+              const normalizedDate = new Date(date.setMilliseconds(0))
 
               const temperatureIn = weatherHistory.temperature_in.find(
                 (data) =>
                   new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDateWithoutMilliSeconds.getTime()
+                  normalizedDate.getTime()
               )
               const temperatureOut = weatherHistory.temperature_out.find(
                 (data) =>
                   new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDateWithoutMilliSeconds.getTime()
+                  normalizedDate.getTime()
               )
               const humidity = weatherHistory.humidity.find(
                 (data) =>
                   new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDateWithoutMilliSeconds.getTime()
+                  normalizedDate.getTime()
               )
               const pressure = weatherHistory.pressure.find(
                 (data) =>
                   new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDateWithoutMilliSeconds.getTime()
+                  normalizedDate.getTime()
               )
 
               return (
