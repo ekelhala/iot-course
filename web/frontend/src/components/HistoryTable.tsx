@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import WeatherDataPoint from '../types/WeatherDataPoint'
 import WeatherHistory from '../types/WeatherHistory'
 import { formatTimestamp } from '../utils'
 
@@ -46,6 +47,14 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
     day: 'numeric',
   })
 
+  // Find weather data matching a normalized timestamp
+  const findWeatherData = (dataArray: WeatherDataPoint[], normalizedTimestamp: Date) =>
+    dataArray.find(
+      (data) =>
+        new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
+        normalizedTimestamp.getTime()
+    )
+
   return (
     <Box textAlign="center" sx={{ m: 3 }}>
       {sortedTimestamps.length === 1 ? (
@@ -81,26 +90,10 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
               const date = new Date(timestamp)
               const normalizedDate = new Date(date.setMilliseconds(0))
 
-              const temperatureIn = weatherHistory.temperature_in.find(
-                (data) =>
-                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDate.getTime()
-              )
-              const temperatureOut = weatherHistory.temperature_out.find(
-                (data) =>
-                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDate.getTime()
-              )
-              const humidity = weatherHistory.humidity.find(
-                (data) =>
-                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDate.getTime()
-              )
-              const pressure = weatherHistory.pressure.find(
-                (data) =>
-                  new Date(new Date(data.timestamp).setMilliseconds(0)).getTime() ===
-                  normalizedDate.getTime()
-              )
+              const temperatureIn = findWeatherData(weatherHistory.temperature_in, normalizedDate)
+              const temperatureOut = findWeatherData(weatherHistory.temperature_out, normalizedDate)
+              const humidity = findWeatherData(weatherHistory.humidity, normalizedDate)
+              const pressure = findWeatherData(weatherHistory.pressure, normalizedDate)
 
               return (
                 <TableRow key={timestamp}>

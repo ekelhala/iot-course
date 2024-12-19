@@ -36,10 +36,14 @@ describe('HistoryTable', () => {
 
   test('displays the correct data in the table', () => {
     render(<HistoryTable weatherHistory={mockWeatherHistory} />)
-    expect(screen.getByText('22 °C')).toBeInTheDocument()
     expect(screen.getByText('18 °C')).toBeInTheDocument()
+    expect(screen.getByText('19 °C')).toBeInTheDocument()
+    expect(screen.getByText('22 °C')).toBeInTheDocument()
+    expect(screen.getByText('23 °C')).toBeInTheDocument()
     expect(screen.getByText('55 %')).toBeInTheDocument()
+    expect(screen.getByText('60 %')).toBeInTheDocument()
     expect(screen.getByText('1012 hPa')).toBeInTheDocument()
+    expect(screen.getByText('1013 hPa')).toBeInTheDocument()
   })
 
   test('displays "N/A" for missing data', () => {
