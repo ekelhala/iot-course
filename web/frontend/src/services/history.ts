@@ -6,7 +6,11 @@ import WeatherDataPoint from '../types/WeatherDataPoint'
 
 // Generic function to get historical values
 // Checks start and end dates
-const getHistoricalData = async <T extends WeatherDataPoint|WeatherHistory> (start: string, end: string, endpoint: string): Promise<T> => {
+const getHistoricalData = async <T extends WeatherDataPoint | WeatherHistory>(
+  start: string,
+  end: string,
+  endpoint: string
+): Promise<T> => {
   if (!start || !end) {
     throw new Error('Start and end dates are required')
   }
@@ -14,13 +18,21 @@ const getHistoricalData = async <T extends WeatherDataPoint|WeatherHistory> (sta
 }
 
 const getAll = async (start: string, end: string): Promise<WeatherHistory> => {
-  return (await getHistoricalData<WeatherHistory>(start, end, 'all'))
+  return await getHistoricalData<WeatherHistory>(start, end, 'all')
 }
 
 // Gets the minimum historical weather data values in time interval start-end
 const getMin = async (start: string, end: string): Promise<WeatherData> => {
-  const minTemperatureIn = await getHistoricalData<WeatherDataPoint>(start, end, 'temperature_out/min')
-  const minTemperatureOut = await getHistoricalData<WeatherDataPoint>(start, end, 'temperature_in/min')
+  const minTemperatureIn = await getHistoricalData<WeatherDataPoint>(
+    start,
+    end,
+    'temperature_out/min'
+  )
+  const minTemperatureOut = await getHistoricalData<WeatherDataPoint>(
+    start,
+    end,
+    'temperature_in/min'
+  )
   const minHumidity = await getHistoricalData<WeatherDataPoint>(start, end, 'humidity/min')
   const minPressure = await getHistoricalData<WeatherDataPoint>(start, end, 'pressure/min')
 
@@ -28,13 +40,21 @@ const getMin = async (start: string, end: string): Promise<WeatherData> => {
     temperature_in: minTemperatureIn,
     temperature_out: minTemperatureOut,
     humidity: minHumidity,
-    pressure: minPressure
+    pressure: minPressure,
   }
 }
 
 const getMax = async (start: string, end: string): Promise<WeatherData> => {
-  const maxTemperatureIn = await getHistoricalData<WeatherDataPoint>(start, end, 'temperature_out/max')
-  const maxTemperatureOut = await getHistoricalData<WeatherDataPoint>(start, end, 'temperature_in/max')
+  const maxTemperatureIn = await getHistoricalData<WeatherDataPoint>(
+    start,
+    end,
+    'temperature_out/max'
+  )
+  const maxTemperatureOut = await getHistoricalData<WeatherDataPoint>(
+    start,
+    end,
+    'temperature_in/max'
+  )
   const maxHumidity = await getHistoricalData<WeatherDataPoint>(start, end, 'humidity/max')
   const maxPressure = await getHistoricalData<WeatherDataPoint>(start, end, 'pressure/max')
 
@@ -42,9 +62,8 @@ const getMax = async (start: string, end: string): Promise<WeatherData> => {
     temperature_in: maxTemperatureIn,
     temperature_out: maxTemperatureOut,
     humidity: maxHumidity,
-    pressure: maxPressure
+    pressure: maxPressure,
   }
 }
-
 
 export default { getAll, getMin, getMax }

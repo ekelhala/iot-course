@@ -11,7 +11,7 @@
     "deploy-web": "git checkout deploy && git pull && git merge web && git push origin deploy && git checkout web",
     "deploy-main": "git checkout deploy && git pull && git merge main && git push origin deploy && git checkout main",
     "lint": "eslint .",
-    "format": "prettier --write \"**/*.{js,jsx,tsx}\"",
+    "format": "prettier --write \"**/*.{js,ts,jsx,tsx}\"",
     "preview": "vite preview"
   },
   "dependencies": {

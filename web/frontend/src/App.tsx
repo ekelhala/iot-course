@@ -25,10 +25,10 @@ function App() {
   const [endDate, setEndDate] = useState<string>(initialEndDate)
 
   const [weatherDataLatest, setWeatherDataLatest] = useState<WeatherData>({
-    temperature_in: { value: 0, timestamp: new Date() },
-    temperature_out: { value: 0, timestamp: new Date() },
-    humidity: { value: 0, timestamp: new Date() },
-    pressure: { value: 0, timestamp: new Date() },
+    temperature_in: { value: 0, timestamp: new Date(), unit: '°C' },
+    temperature_out: { value: 0, timestamp: new Date(), unit: '°C' },
+    humidity: { value: 0, timestamp: new Date(), unit: '%' },
+    pressure: { value: 0, timestamp: new Date(), unit: 'hPa' },
   })
 
   const [weatherHistory, setWeatherHistory] = useState<WeatherHistory>({
@@ -40,16 +40,16 @@ function App() {
 
   const [weatherDataMinMax, setWeatherDataMinMax] = useState<WeatherDataMinMax>({
     min: {
-      temperature_in: { value: 0, timestamp: new Date() },
-      temperature_out: { value: 0, timestamp: new Date() },
-      humidity: { value: 0, timestamp: new Date() },
-      pressure: { value: 0, timestamp: new Date() },
+      temperature_in: { value: 0, timestamp: new Date(), unit: '°C' },
+      temperature_out: { value: 0, timestamp: new Date(), unit: '°C' },
+      humidity: { value: 0, timestamp: new Date(), unit: '%' },
+      pressure: { value: 0, timestamp: new Date(), unit: 'hPa' },
     },
     max: {
-      temperature_in: { value: 0, timestamp: new Date() },
-      temperature_out: { value: 0, timestamp: new Date() },
-      humidity: { value: 0, timestamp: new Date() },
-      pressure: { value: 0, timestamp: new Date() },
+      temperature_in: { value: 0, timestamp: new Date(), unit: '°C' },
+      temperature_out: { value: 0, timestamp: new Date(), unit: '°C' },
+      humidity: { value: 0, timestamp: new Date(), unit: '%' },
+      pressure: { value: 0, timestamp: new Date(), unit: 'hPa' },
     },
   })
 

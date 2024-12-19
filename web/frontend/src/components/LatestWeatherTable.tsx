@@ -31,14 +31,14 @@ const LatestWeatherTable = ({ weatherDataLatest }: LatestWeatherTableProps) => {
               <TableCell component="th" scope="row">
                 temperature_in
               </TableCell>
-              <TableCell align="left">{weatherDataLatest.temperature_in?.value}&deg;C</TableCell>
+              <TableCell align="left">{weatherDataLatest.temperature_in?.value} &deg;C</TableCell>
               <TableCell align="left">
                 {formatTimestamp(weatherDataLatest.temperature_in?.timestamp)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>temperature_out</TableCell>
-              <TableCell align="left">{weatherDataLatest.temperature_out?.value}&deg;C</TableCell>
+              <TableCell align="left">{weatherDataLatest.temperature_out?.value} &deg;C</TableCell>
               <TableCell align="left">
                 {formatTimestamp(weatherDataLatest.temperature_out?.timestamp)}
               </TableCell>

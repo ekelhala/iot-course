@@ -1,4 +1,4 @@
-import WeatherDataPoint from "./WeatherDataPoint";
+import WeatherDataPoint from './WeatherDataPoint'
 
 interface WeatherData extends Record<string, any> {
   temperature_in: WeatherDataPoint
