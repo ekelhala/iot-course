@@ -40,7 +40,7 @@ const WeatherDataGraph = ({ weatherHistory }: WeatherDataGraphProps) => {
     return filteredDataPoints
   }
 
-  const timestampFormatter = (timestamp: any) => {
+  const timestampFormatter = (timestamp: any): string => {
     return new Date(timestamp).toLocaleString(undefined, {
       year: '2-digit',
       month: '2-digit',

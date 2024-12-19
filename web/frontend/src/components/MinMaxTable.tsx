@@ -11,12 +11,29 @@ import { formatTimestamp } from '../utils'
 
 interface MinMaxTableProps {
   weatherDataMinMax: WeatherDataMinMax
+  startDate: string
+  endDate: string
 }
 
-const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
+const MinMaxTable = ({ weatherDataMinMax, startDate, endDate }: MinMaxTableProps) => {
+  const formattedStart = formatTimestamp(new Date(startDate), {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  })
+
+  const formattedEnd = formatTimestamp(new Date(endDate), {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  })
+
   return (
     <Box textAlign="center" sx={{ m: 3 }}>
-      <b>Maximum values during period</b>
+      <b>Maximum values</b>
+      <p>
+        {formattedStart} - {formattedEnd}
+      </p>
       <TableContainer className="weather-table" component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
@@ -40,7 +57,9 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
               return (
                 <TableRow key={`max-${dataType}`}>
                   <TableCell>{dataType}</TableCell>
-                  <TableCell>{weatherDataMinMax.max[dataType].value}</TableCell>
+                  <TableCell>
+                    {weatherDataMinMax.max[dataType].value} {weatherDataMinMax.max[dataType].unit}
+                  </TableCell>
                   <TableCell>
                     {formatTimestamp(weatherDataMinMax.max[dataType].timestamp)}
                   </TableCell>
@@ -51,7 +70,10 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
         </Table>
       </TableContainer>
 
-      <b>Minimum values during period</b>
+      <b>Minimum values</b>
+      <p>
+        {formattedStart} - {formattedEnd}
+      </p>
       <TableContainer className="weather-table" component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
@@ -75,7 +97,9 @@ const MinMaxTable = ({ weatherDataMinMax }: MinMaxTableProps) => {
               return (
                 <TableRow key={`min-${dataType}`}>
                   <TableCell>{dataType}</TableCell>
-                  <TableCell>{weatherDataMinMax.min[dataType].value}</TableCell>
+                  <TableCell>
+                    {weatherDataMinMax.min[dataType].value} {weatherDataMinMax.max[dataType].unit}
+                  </TableCell>
                   <TableCell>
                     {formatTimestamp(weatherDataMinMax.min[dataType].timestamp)}
                   </TableCell>

@@ -26,9 +26,27 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
   const humidityHistory = sortWeatherHistory(weatherHistory.humidity)
   const pressureHistory = sortWeatherHistory(weatherHistory.pressure)
 
+  const latestTimeStamp = formatTimestamp(temperatureInHistory[0]?.timestamp, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  })
+
+  const oldestTimeStamp = formatTimestamp(
+    temperatureInHistory[temperatureInHistory.length - 1]?.timestamp,
+    {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    }
+  )
+
   return (
     <Box textAlign="center" sx={{ m: 3 }}>
-      <b>Historical data</b>
+      <b>Historical data: {temperatureInHistory.length} rows</b>
+      <p>
+        {oldestTimeStamp} - {latestTimeStamp}
+      </p>
 
       <TableContainer className="weather-table" component={Paper}>
         <Table aria-label="simple table">
@@ -36,90 +54,24 @@ const HistoryTable = ({ weatherHistory }: HistoryTableProps) => {
             <TableRow>
               <TableCell align="left">Timestamp</TableCell>
               <TableCell align="left">temperature_in</TableCell>
+              <TableCell align="left">temperature_out</TableCell>
+              <TableCell align="left">humidity</TableCell>
+              <TableCell align="left">pressure</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {temperatureInHistory.length === 0 && (
               <TableRow>
-                <TableCell colSpan={2}>No data available</TableCell>
+                <TableCell colSpan={5}>No data available</TableCell>
               </TableRow>
             )}
-            {temperatureInHistory?.map((item, index) => (
-              <TableRow key={`${item.timestamp}-${index}`}>
-                <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                <TableCell>{item.value}&deg;C</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <TableContainer className="weather-table" component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Timestamp</TableCell>
-              <TableCell align="left">temperature_out</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {temperatureOutHistory.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={2}>No data available</TableCell>
-              </TableRow>
-            )}
-            {temperatureOutHistory?.map((item, index) => (
-              <TableRow key={`${item.timestamp}-${index}`}>
-                <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                <TableCell>{item.value}&deg;C</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <TableContainer className="weather-table" component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Timestamp</TableCell>
-              <TableCell align="left">humidity</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {humidityHistory.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={2}>No data available</TableCell>
-              </TableRow>
-            )}
-            {humidityHistory?.map((item, index) => (
-              <TableRow key={`${item.timestamp}-${index}`}>
-                <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                <TableCell>{item.value} %</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <TableContainer className="weather-table" component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Timestamp</TableCell>
-              <TableCell align="left">pressure</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {pressureHistory.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={2}>No data available</TableCell>
-              </TableRow>
-            )}
-            {pressureHistory?.map((item, index) => (
-              <TableRow key={`${item.timestamp}-${index}`}>
-                <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                <TableCell>{item.value} hPa</TableCell>
+            {temperatureInHistory?.map((temperatureIn, index) => (
+              <TableRow key={`${temperatureIn.timestamp}-${index}`}>
+                <TableCell>{formatTimestamp(temperatureIn.timestamp)}</TableCell>
+                <TableCell>{temperatureIn.value} &deg;C</TableCell>
+                <TableCell>{temperatureOutHistory[index]?.value ?? 'N/A'} &deg;C</TableCell>
+                <TableCell>{humidityHistory[index]?.value ?? 'N/A'} %</TableCell>
+                <TableCell>{pressureHistory[index]?.value ?? 'N/A'} hPa</TableCell>
               </TableRow>
             ))}
           </TableBody>

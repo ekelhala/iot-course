@@ -1,6 +1,7 @@
 type WeatherDataPoint = {
-    value: number,
-    timestamp: Date
+  value: number
+  timestamp: Date
+  unit: string
 }
 
-export default WeatherDataPoint;
+export default WeatherDataPoint
