@@ -39,6 +39,7 @@ mongoose
 
 // MQTT handlers
 mqttClient.on('message', async (topic: string, message: Buffer, packet: mqtt.IPublishPacket) => {
+  console.log(new Date().valueOf())
   const payload = {
     value: Number(message.toString()),
     timestamp: new Date().toISOString(),
